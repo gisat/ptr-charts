@@ -1,6 +1,6 @@
 {
   "name": "@gisatcz/ptr-charts",
-  "version": "0.0.1-pre-alpha",
+  "version": "0.0.2-pre-alpha",
   "description": "Panther FE utils",
   "keywords": [
     "panther",
@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@gisatcz/ptr-utils": "1.0.5",
-    "@gisatcz/ptr-core": "0.0.4-pre-alpha",
+    "@gisatcz/ptr-core": "0.0.5-pre-alpha",
     "chroma-js": "2.1.0",
     "classnames": "2.2.6",
     "d3": "5.15.0",
