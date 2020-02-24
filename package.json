@@ -1,6 +1,6 @@
 {
   "name": "@gisatcz/ptr-charts",
-  "version": "0.0.4-pre-alpha",
+  "version": "0.0.5-pre-alpha",
   "description": "Panther FE charts",
   "keywords": [
     "panther",
@@ -15,16 +15,20 @@
     "url": "https://github.com/gisat/ptr-utils"
   },
   "dependencies": {
+    "@gisatcz/ptr-atoms": "0.0.1-pre-alpha",
     "@gisatcz/ptr-utils": "1.0.5",
     "@gisatcz/ptr-core": "0.0.6-pre-alpha",
     "chroma-js": "2.1.0",
     "classnames": "2.2.6",
     "d3": "5.15.0",
     "d3-sankey": "0.12.3",
+    "dom-to-image": "2.6.0",
+    "downloadjs": "1.4.7",
     "lodash": "4.17.15",
     "moment": "2.24.0",
     "prop-types": "15.7.2",
-    "react": "16.12.0"
+    "react": "16.12.0",
+    "react-resize-detector": "4.2.1"
   },
   "devDependencies": {
     "@babel/preset-env": "7.8.4",

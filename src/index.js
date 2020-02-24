@@ -1,4 +1,5 @@
 import ChartLegend from "./ChartLegend";
+import ChartWrapper from "./ChartWrapper";
 
 import AxisLabel from "./charts/AxisLabel";
 
@@ -17,6 +18,7 @@ export {
 
     AxisLabel,
     ChartLegend,
+    ChartWrapper
 };
 
 export default {
@@ -28,4 +30,5 @@ export default {
 
     AxisLabel,
     ChartLegend,
+    ChartWrapper
 }

@@ -30,12 +30,16 @@ module.exports = {
     },
     externals: {
         react: 'react',
+        'react-resize-detector': 'react-resize-detector',
         lodash: 'lodash',
         classnames: 'classnames',
         'prop-types': 'prop-types',
         'chroma-js': 'chroma-js',
         d3: 'd3',
+        'dom-to-image': 'dom-to-image',
+        'downloadjs': 'downloadjs',
         'moment': 'moment',
+        '@gisatcz/ptr-atoms': '@gisatcz/ptr-atoms',
         '@gisatcz/ptr-core': '@gisatcz/ptr-core',
         '@gisatcz/ptr-utils': '@gisatcz/ptr-utils'
     }
