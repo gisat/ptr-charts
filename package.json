@@ -1,6 +1,6 @@
 {
   "name": "@gisatcz/ptr-charts",
-  "version": "0.0.3-pre-alpha",
+  "version": "0.0.4-pre-alpha",
   "description": "Panther FE charts",
   "keywords": [
     "panther",
@@ -20,7 +20,9 @@
     "chroma-js": "2.1.0",
     "classnames": "2.2.6",
     "d3": "5.15.0",
+    "d3-sankey": "0.12.3",
     "lodash": "4.17.15",
+    "moment": "2.24.0",
     "prop-types": "15.7.2",
     "react": "16.12.0"
   },

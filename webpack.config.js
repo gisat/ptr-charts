@@ -7,7 +7,7 @@ module.exports = {
         sourceMapFilename: "index.js.map",
         libraryTarget: 'umd'
     },
-    devtool: 'eval-source-map', // TODO comment this line before build
+    // devtool: 'eval-source-map', // TODO comment this line before build
     module: {
         rules: [
             {
@@ -35,6 +35,7 @@ module.exports = {
         'prop-types': 'prop-types',
         'chroma-js': 'chroma-js',
         d3: 'd3',
+        'moment': 'moment',
         '@gisatcz/ptr-core': '@gisatcz/ptr-core',
         '@gisatcz/ptr-utils': '@gisatcz/ptr-utils'
     }

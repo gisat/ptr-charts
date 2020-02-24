@@ -7,7 +7,7 @@ import chroma from 'chroma-js';
 
 import './style.scss';
 import Segment from "./Segment";
-// import ChartLegend from "../ChartLegend/ChartLegend";
+import ChartLegend from "../../ChartLegend";
 
 import {filter, sort, utils} from '@gisatcz/ptr-utils';
 
@@ -379,15 +379,15 @@ class AsterChart extends React.PureComponent {
 	}
 
 	renderLegend(data, numericLink) {
-		// return (
-		// 	<ChartLegend
-		// 		data={data}
-		// 		keySourcePath={this.props.keySourcePath}
-		// 		nameSourcePath={this.props.nameSourcePath}
-		// 		colorSourcePath={this.props.colorSourcePath}
-		// 		numericLink={numericLink}
-		// 	/>
-		// );
+		return (
+			<ChartLegend
+				data={data}
+				keySourcePath={this.props.keySourcePath}
+				nameSourcePath={this.props.nameSourcePath}
+				colorSourcePath={this.props.colorSourcePath}
+				numericLink={numericLink}
+			/>
+		);
 	}
 }
 
