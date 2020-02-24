@@ -1,21 +1,20 @@
 var path = require('path');
 module.exports = {
     entry: './src/index.js',
-    mode: 'production',
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: 'index.js',
-        libraryTarget: 'commonjs2'
+        sourceMapFilename: "index.js.map",
+        libraryTarget: 'umd'
     },
+    devtool: 'eval-source-map', // TODO comment this line before build
     module: {
         rules: [
             {
                 test: /\.js$/,
                 include: path.resolve(__dirname, 'src'),
-                exclude: /(node_modules|bower_components|build)/,
-                use: {
-                    loader: 'babel-loader'
-                }
+                exclude: /(node_modules|bower_components)/,
+                use: ['babel-loader', 'source-map-loader']
             }, {
                 test: /\.s[ac]ss$/i,
                 use: [
