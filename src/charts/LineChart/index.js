@@ -12,7 +12,7 @@ import cartesianChart from "../cartesianChart/cartesianChart";
 import CartesianChartContent from "../cartesianChart/CartesianChartContent";
 import ChartLegend from '../../ChartLegend';
 
-class Index extends React.PureComponent {
+class LineChart extends React.PureComponent {
 	static defaultProps = {
 		grayingThreshold: 10,
 		aggregationThreshold: 50,
@@ -354,5 +354,5 @@ class Index extends React.PureComponent {
 	}
 }
 
-export default cartesianChart(Index);
+export default cartesianChart(LineChart);
 

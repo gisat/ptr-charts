@@ -7,7 +7,6 @@ module.exports = {
         sourceMapFilename: "index.js.map",
         libraryTarget: 'umd'
     },
-    // devtool: 'eval-source-map', // TODO comment this line before build
     module: {
         rules: [
             {
