@@ -29,6 +29,7 @@ module.exports = {
     },
     externals: {
         react: 'react',
+        'react-redux': 'react-redux',
         'react-resize-detector': 'react-resize-detector',
         lodash: 'lodash',
         classnames: 'classnames',
@@ -40,6 +41,7 @@ module.exports = {
         'moment': 'moment',
         '@gisatcz/ptr-atoms': '@gisatcz/ptr-atoms',
         '@gisatcz/ptr-core': '@gisatcz/ptr-core',
-        '@gisatcz/ptr-utils': '@gisatcz/ptr-utils'
+        '@gisatcz/ptr-utils': '@gisatcz/ptr-utils',
+        '@gisatcz/ptr-state': '@gisatcz/ptr-state',
     }
 };
