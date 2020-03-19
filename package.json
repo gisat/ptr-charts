@@ -1,6 +1,6 @@
 {
   "name": "@gisatcz/ptr-charts",
-  "version": "1.1.0-alpha",
+  "version": "1.2.0",
   "description": "Panther FE charts",
   "keywords": [
     "panther",
@@ -20,9 +20,9 @@
     "url": "https://github.com/gisat/ptr-charts"
   },
   "dependencies": {
-    "@gisatcz/ptr-atoms": "1.1.0-alpha",
-    "@gisatcz/ptr-utils": "1.1.1",
-    "@gisatcz/ptr-core": "1.1.2-alpha",
+    "@gisatcz/ptr-atoms": "1.2.0",
+    "@gisatcz/ptr-utils": "1.2.0",
+    "@gisatcz/ptr-core": "1.2.0",
     "chroma-js": "2.1.0",
     "classnames": "2.2.6",
     "d3": "5.15.0",
