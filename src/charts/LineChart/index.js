@@ -28,6 +28,7 @@ class LineChart extends React.PureComponent {
 		aggregationThreshold: PropTypes.number,
 		grayingThreshold: PropTypes.number,
 		withPoints: PropTypes.bool,
+		pointOptions: PropTypes.object,
 
 		serieDataSourcePath: PropTypes.string.isRequired,
 		pointNameSourcePath: PropTypes.string //in context of serie (for custom point name in popup) // TODO coplex solution for chart popups
@@ -213,6 +214,7 @@ class LineChart extends React.PureComponent {
 					defaultColor={color}
 					highlightColor={color}
 					withPoints={this.props.withPoints}
+					pointOptions={this.props.pointOptions}
 					siblings={siblings}
 					gray={mode === 'gray'}
 					pointNameSourcePath={props.pointNameSourcePath || props.xSourcePath}
