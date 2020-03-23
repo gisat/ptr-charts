@@ -123,7 +123,7 @@ class LineChart extends React.PureComponent {
 			yScale = d3.scaleLinear();
 
 			if (this.props.yScaleType === 'logarithmic') {
-				yScale = d3.scaleLog();
+				yScale = d3.scaleLog().base(10);
 			}
 
 			yScale.domain(yDomain).range([props.innerPlotHeight, 0]);
