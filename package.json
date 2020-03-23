@@ -1,6 +1,6 @@
 {
   "name": "@gisatcz/ptr-charts",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Panther FE charts",
   "keywords": [
     "panther",
@@ -21,8 +21,8 @@
   },
   "dependencies": {
     "@gisatcz/ptr-atoms": "1.2.0",
-    "@gisatcz/ptr-utils": "1.2.0",
-    "@gisatcz/ptr-core": "1.2.0",
+    "@gisatcz/ptr-utils": "1.2.3",
+    "@gisatcz/ptr-core": "1.2.2",
     "chroma-js": "2.1.0",
     "classnames": "2.2.6",
     "d3": "5.15.0",
@@ -44,6 +44,7 @@
     "@rollup/plugin-commonjs": "^11.0.2",
     "@rollup/plugin-json": "^4.0.2",
     "@rollup/plugin-node-resolve": "^7.1.1",
+    "@rollup/plugin-alias": "3.0.1",
     "babel-loader": "8.0.6",
     "babel-plugin-lodash": "^3.3.4",
     "builtin-modules": "^3.1.0",

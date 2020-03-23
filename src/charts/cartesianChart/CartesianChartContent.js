@@ -21,6 +21,7 @@ class CartesianChartContent extends React.PureComponent {
 			<>
 				<AxisY
 					scale={props.yScale}
+					scaleType={props.yScaleType}
 
 					bottomMargin={props.xValuesSize}
 					topPadding={props.innerPaddingTop}

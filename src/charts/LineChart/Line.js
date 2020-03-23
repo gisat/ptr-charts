@@ -27,6 +27,7 @@ class Line extends React.PureComponent {
 		]),
 		highlighted: PropTypes.bool,
 		withPoints: PropTypes.bool,
+		pointOptions: PropTypes.object,
 		siblings: PropTypes.array,
 		suppressed: PropTypes.bool,
 		gray: PropTypes.bool,
@@ -190,6 +191,7 @@ class Line extends React.PureComponent {
 
 	renderPoints(color, highlighted) {
 		const props = this.props;
+		const options = props.pointOptions;
 
 		return props.coordinates.map((point) => {
 			return (
@@ -199,9 +201,12 @@ class Line extends React.PureComponent {
 					x={point.x}
 					y={point.y}
 					data={point.originalData}
-					r={5}
+					r={(options && options.radius) || 5}
 					color={color}
 					hidden={this.props.gray}
+					zOptions={{
+						showOnHover: options && options.showOnHover
+					}}
 					highlighted={highlighted}
 					onMouseOver={this.onMouseOver}
 					onMouseMove={this.onMouseMove}

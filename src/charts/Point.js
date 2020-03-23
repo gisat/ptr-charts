@@ -44,7 +44,8 @@ class Point extends React.PureComponent {
 
 		standalone: PropTypes.bool,
 		siblings: PropTypes.array,
-		symbol: PropTypes.string
+		symbol: PropTypes.string,
+		hidden: PropTypes.bool
 	};
 
 	constructor(props) {
@@ -153,6 +154,14 @@ class Point extends React.PureComponent {
 			style.opacity = .25;
 		} else if (!this.props.hidden) {
 			style.opacity = 1;
+		}
+
+		if (this.props.zOptions && this.props.zOptions.showOnHover) {
+			if (this.props.highlighted) {
+				style.opacity = 1;
+			} else {
+				style.opacity = 0;
+			}
 		}
 
 		if (props.symbol === 'plus') {

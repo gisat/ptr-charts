@@ -99,13 +99,13 @@ class AxisY extends React.PureComponent {
 
 		let shift = props.ticks ? (TICK_SIZE + TICK_CAPTION_OFFSET_VERTICAL) : TICK_CAPTION_OFFSET_VERTICAL;
 		let ticks = props.scale.ticks(tickCount);
+		let domain = props.scale.domain();
 
 		if (props.diverging) {
 			let diversionValue = props.options && props.options.diversionValue || 0;
 			let notInTicks = _.indexOf(ticks, diversionValue) === -1;
 			if (notInTicks) {
 				let newTicks = [diversionValue];
-				let domain = props.scale.domain();
 				let min = domain[0];
 				let max = domain[1];
 				let step = Math.abs(ticks[0] - ticks[1]);
@@ -116,6 +116,15 @@ class AxisY extends React.PureComponent {
 					newTicks.unshift(j);
 				}
 				ticks = newTicks;
+			}
+		}
+
+		if (props.scaleType === 'logarithmic') {
+			let minDigits = domain[0].toString().length;
+			let maxDigits = domain[1].toString().length;
+			ticks = [];
+			for (let i = (minDigits - 1); i <= maxDigits; i++) {
+				ticks.push(Math.pow(10, i));
 			}
 		}
 
