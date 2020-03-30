@@ -96,15 +96,24 @@ class AxisX extends React.PureComponent {
 
 		if (this.props.scaleType === 'ordinal') {
 			return this.renderOrdinalGrid(shift);
-		} else if (this.props.scaleType === 'linear') {
-			return this.renderLinearGrid(shift);
-		} else if (this.props.scaleType === 'time') {
+		} else {
 			return this.renderLinearGrid(shift);
 		}
 	}
 
 	renderLinearGrid(shift) {
 		let ticks = this.props.scale.ticks(this.props.width > 300 ? MAX_TICK_COUNT : MIN_TICK_COUNT);
+
+		if (this.props.scaleType === 'logarithmic') {
+			let domain = this.props.scale.domain();
+			let minDigits = domain[0].toString().length;
+			let maxDigits = domain[1].toString().length;
+			ticks = [];
+			for (let i = (minDigits - 1); i <= maxDigits; i++) {
+				ticks.push(Math.pow(10, i));
+			}
+		}
+
 		let availableHeight = (this.props.width/ticks.length)/Math.sqrt(2);
 
 		return (
