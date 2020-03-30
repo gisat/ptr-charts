@@ -29,7 +29,6 @@ class Index extends React.PureComponent {
 		isSerie: PropTypes.bool,
 		itemNameSourcePath: PropTypes.string, // only if serie
 
-		// TODO add to docs
 		pointSymbol: PropTypes.string,
 
 		zSourcePath: PropTypes.string,
@@ -120,11 +119,11 @@ class Index extends React.PureComponent {
 
 			// apply diversion value to extreme values
 			let diversionValue = props.diverging && props.yOptions && props.yOptions.diversionValue || 0;
-			if (yMin > diversionValue) {
+			if (props.diverging && yMin > diversionValue) {
 				yMin = diversionValue;
 			}
 
-			if (yMax < diversionValue) {
+			if (props.diverging && yMax < diversionValue) {
 				yMax = diversionValue;
 			}
 
@@ -140,23 +139,27 @@ class Index extends React.PureComponent {
 			zDomain = [_.min(zValues), _.max(zValues)];
 
 			/* scales */
+			/* x */
 			if (props.xScaleType === 'time') {
-				xScale = d3
-					.scaleTime()
-					.domain(xDomain)
-					.range([0, props.innerPlotWidth]);
+				xScale = d3.scaleTime();
+			} else if (props.xScaleType === 'logarithmic') {
+				xScale = d3.scaleLog()
 			} else {
-				xScale = d3
-					.scaleLinear()
-					.domain(xDomain)
-					.range([0, props.innerPlotWidth]);
+				xScale = d3.scaleLinear();
 			}
 
-			yScale = d3
-				.scaleLinear()
-				.domain(yDomain)
-				.range([props.innerPlotHeight, 0]);
+			xScale.domain(xDomain).range([0, props.innerPlotWidth]);
 
+			/* y */
+			if (props.yScaleType === 'logarithmic') {
+				yScale = d3.scaleLog().base(10);
+			} else {
+				yScale = d3.scaleLinear();
+			}
+
+			yScale.domain(yDomain).range([props.innerPlotHeight, 0]);
+
+			/* z */
 			zScale = d3
 				.scaleLinear()
 				.domain(zDomain)
@@ -228,6 +231,7 @@ class Index extends React.PureComponent {
 				}
 
 				let yValue = _.get(item, this.props.ySourcePath);
+
 				let zValue = _.get(item, this.props.zSourcePath);
 
 				return this.renderPoint(key, item, xScale(xValue), yScale(yValue), zScale(zValue), color, name, 0, siblings);
