@@ -5,7 +5,7 @@ import _ from 'lodash';
 
 import './style.scss';
 
-import {Context} from "@gisatcz/ptr-core";
+import Context from '@gisatcz/cross-package-react-context';
 const HoverContext = Context.getContext('HoverContext');
 
 const DEFAULT_COLOR = "#2aa8a3";

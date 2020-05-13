@@ -6,7 +6,7 @@ import Bar from "./Bar";
 
 import './style.scss';
 
-import {Context} from "@gisatcz/ptr-core";
+import Context from '@gisatcz/cross-package-react-context';
 const HoverContext = Context.getContext('HoverContext');
 
 const ANIMATION_DURATION = 1500;

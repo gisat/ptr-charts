@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import _ from 'lodash';
-import {Context} from "@gisatcz/ptr-core";
+import Context from '@gisatcz/cross-package-react-context';
 import './style.scss';
 
 const HoverContext = Context.getContext('HoverContext');
