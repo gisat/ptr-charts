@@ -7,11 +7,10 @@ import moment from "moment";
 import '../style.scss';
 import Point from "../Point";
 
-import {Context} from "@gisatcz/ptr-core";
-const HoverContext = Context.getContext('HoverContext');
+import Context from '@gisatcz/cross-package-react-context';
 
 class Line extends React.PureComponent {
-	static contextType = HoverContext;
+	static contextType = Context.getContext('HoverContext');
 
 	static propTypes = {
 		itemKey: PropTypes.oneOfType([

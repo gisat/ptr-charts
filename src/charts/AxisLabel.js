@@ -4,7 +4,7 @@ import classnames from 'classnames';
 import _ from 'lodash';
 
 import './style.scss';
-import {Context} from "@gisatcz/ptr-core";
+import Context from '@gisatcz/cross-package-react-context';
 const HoverContext = Context.getContext('HoverContext');
 
 class AxisLabel extends React.PureComponent {

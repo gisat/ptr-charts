@@ -6,7 +6,7 @@ import * as d3Sankey from 'd3-sankey';
 
 import '../style.scss';
 
-import {Context} from "@gisatcz/ptr-core";
+import Context from '@gisatcz/cross-package-react-context';
 const HoverContext = Context.getContext('HoverContext');
 
 class Link extends React.PureComponent {

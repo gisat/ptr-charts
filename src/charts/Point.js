@@ -4,12 +4,11 @@ import classnames from 'classnames';
 import _ from 'lodash';
 import moment from 'moment';
 
-import {Context} from "@gisatcz/ptr-core";
+import Context from '@gisatcz/cross-package-react-context';
 import './style.scss';
-const HoverContext = Context.getContext('HoverContext');
 
 class Point extends React.PureComponent {
-	static contextType = HoverContext;
+	static contextType = Context.getContext('HoverContext');
 
 	static propTypes = {
 		itemKey: PropTypes.oneOfType([

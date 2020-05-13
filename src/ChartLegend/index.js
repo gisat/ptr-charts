@@ -5,7 +5,7 @@ import chroma from 'chroma-js';
 import _ from 'lodash';
 import './style.scss';
 
-import {Context} from "@gisatcz/ptr-core";
+import Context from '@gisatcz/cross-package-react-context';
 const HoverContext = Context.getContext('HoverContext');
 
 class ChartLegend extends React.PureComponent {
