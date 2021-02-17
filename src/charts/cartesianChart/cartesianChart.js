@@ -1,10 +1,9 @@
 import React from 'react';
-import PropTypes from "prop-types";
-import {utils} from '@gisatcz/ptr-utils'
+import PropTypes from 'prop-types';
+import {utils} from '@gisatcz/ptr-utils';
 
-export default (WrappedChartComponent) => {
+export default WrappedChartComponent => {
 	class CartesianChart extends React.PureComponent {
-
 		/* sizes in rem */
 		static defaultProps = {
 			height: 15,
@@ -13,16 +12,16 @@ export default (WrappedChartComponent) => {
 			xValuesSize: 3,
 			yValuesSize: 3,
 
-			innerPaddingLeft: .7,
-			innerPaddingRight: .7,
-			innerPaddingTop: .7,
+			innerPaddingLeft: 0.7,
+			innerPaddingRight: 0.7,
+			innerPaddingTop: 0.7,
 
 			xValues: true,
 			yValues: true,
 
 			xTicks: true,
 
-			yGridlines: true
+			yGridlines: true,
 		};
 
 		static propTypes = {
@@ -32,10 +31,8 @@ export default (WrappedChartComponent) => {
 			colorSourcePath: PropTypes.string, // only if color is defined in data
 			serieDataSourcePath: PropTypes.string, // only if serie
 			xSourcePath: PropTypes.string.isRequired, // if serie, path is in context of serie
-			ySourcePath: PropTypes.oneOfType([
-				PropTypes.string,
-				PropTypes.array
-			]).isRequired, // if serie, path is in context of serie
+			ySourcePath: PropTypes.oneOfType([PropTypes.string, PropTypes.array])
+				.isRequired, // if serie, path is in context of serie
 
 			sorting: PropTypes.array,
 
@@ -70,12 +67,9 @@ export default (WrappedChartComponent) => {
 			// TODO doc
 			border: PropTypes.bool,
 
-			diverging: PropTypes.oneOfType([
-				PropTypes.string,
-				PropTypes.bool
-			]),
+			diverging: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
 
-			legend: PropTypes.bool
+			legend: PropTypes.bool,
 		};
 
 		constructor(props) {
@@ -83,13 +77,16 @@ export default (WrappedChartComponent) => {
 
 			this.ref = React.createRef();
 			this.state = {
-				width: null
-			}
+				width: null,
+			};
 		}
 
 		componentDidMount() {
 			this.resize();
-			if (window) window.addEventListener('resize', this.resize.bind(this), {passive: true}); //todo IE
+			if (window)
+				window.addEventListener('resize', this.resize.bind(this), {
+					passive: true,
+				}); //todo IE
 		}
 
 		resize() {
@@ -97,7 +94,7 @@ export default (WrappedChartComponent) => {
 				let pxWidth = this.ref.current.clientWidth;
 
 				this.setState({
-					width: pxWidth
+					width: pxWidth,
 				});
 			}
 		}
@@ -112,47 +109,60 @@ export default (WrappedChartComponent) => {
 				const props = this.props;
 
 				/* dimensions */
-				width = (this.props.width ? this.props.width*remSize : this.state.width);
-				let height = props.height*remSize;
+				width = this.props.width
+					? this.props.width * remSize
+					: this.state.width;
+				let height = props.height * remSize;
 
-				let minWidth = props.minWidth*remSize;
-				let maxWidth = props.maxWidth*remSize;
+				let minWidth = props.minWidth * remSize;
+				let maxWidth = props.maxWidth * remSize;
 
-				let xValuesSize = props.xValues ? props.xValuesSize*remSize : .5*remSize;
-				let yValuesSize = props.yValues ? props.yValuesSize*remSize : .5*remSize;
+				let xValuesSize = props.xValues
+					? props.xValuesSize * remSize
+					: 0.5 * remSize;
+				let yValuesSize = props.yValues
+					? props.yValuesSize * remSize
+					: 0.5 * remSize;
 
-				if (WrappedChartComponent.defaultProps && WrappedChartComponent.defaultProps.maxPointRadius && this.props.zSourcePath) {
+				if (
+					WrappedChartComponent.defaultProps &&
+					WrappedChartComponent.defaultProps.maxPointRadius &&
+					this.props.zSourcePath
+				) {
 					paddingAdjustment = WrappedChartComponent.defaultProps.maxPointRadius;
 				}
 
-				let innerPaddingLeft = props.innerPaddingLeft*remSize + paddingAdjustment;
-				let innerPaddingRight = props.innerPaddingRight*remSize + paddingAdjustment;
-				let innerPaddingTop = props.innerPaddingTop*remSize + paddingAdjustment;
+				let innerPaddingLeft =
+					props.innerPaddingLeft * remSize + paddingAdjustment;
+				let innerPaddingRight =
+					props.innerPaddingRight * remSize + paddingAdjustment;
+				let innerPaddingTop =
+					props.innerPaddingTop * remSize + paddingAdjustment;
 
 				let xLabelSize = 0;
 				let yLabelSize = 0;
 
 				if (!props.xValues && !props.xValuesSize) {
-					xValuesSize = props.yValues ? 1*remSize : 0; // space for labels
+					xValuesSize = props.yValues ? 1 * remSize : 0; // space for labels
 				}
 
 				if (!props.yValues && !props.yValuesSize) {
-					yValuesSize = props.xValues ? 2*remSize : 0; // space for labels
+					yValuesSize = props.xValues ? 2 * remSize : 0; // space for labels
 				}
 
 				if (props.xLabel) {
-					xLabelSize = 1*remSize;
+					xLabelSize = 1 * remSize;
 				}
 
 				if (props.yLabel) {
-					yLabelSize = 1*remSize;
+					yLabelSize = 1 * remSize;
 				}
 
 				if (width > maxWidth) width = maxWidth;
 				if (width < minWidth) width = minWidth;
 
-				if (props.minAspectRatio && width/height < props.minAspectRatio) {
-					height = width/props.minAspectRatio;
+				if (props.minAspectRatio && width / height < props.minAspectRatio) {
+					height = width / props.minAspectRatio;
 				}
 
 				let plotWidth = width - yValuesSize - yLabelSize;
@@ -160,32 +170,34 @@ export default (WrappedChartComponent) => {
 				let innerPlotWidth = plotWidth - innerPaddingLeft - innerPaddingRight;
 				let innerPlotHeight = plotHeight - innerPaddingTop;
 
-				content = (<WrappedChartComponent
-					{...this.props}
-					{...{
-						width,
-						height,
+				content = (
+					<WrappedChartComponent
+						{...this.props}
+						{...{
+							width,
+							height,
 
-						minWidth,
-						maxWidth,
+							minWidth,
+							maxWidth,
 
-						xValuesSize,
-						yValuesSize,
+							xValuesSize,
+							yValuesSize,
 
-						xLabelSize,
-						yLabelSize,
+							xLabelSize,
+							yLabelSize,
 
-						plotWidth,
-						plotHeight,
+							plotWidth,
+							plotHeight,
 
-						innerPaddingLeft,
-						innerPaddingRight,
-						innerPaddingTop,
+							innerPaddingLeft,
+							innerPaddingRight,
+							innerPaddingTop,
 
-						innerPlotWidth,
-						innerPlotHeight
-					}}
-				/>);
+							innerPlotWidth,
+							innerPlotHeight,
+						}}
+					/>
+				);
 			}
 
 			let style = {};
@@ -195,9 +207,7 @@ export default (WrappedChartComponent) => {
 
 			return (
 				<div className="ptr-chart-container" ref={this.ref}>
-					<div style={style}>
-						{content}
-					</div>
+					<div style={style}>{content}</div>
 				</div>
 			);
 		}
@@ -205,5 +215,3 @@ export default (WrappedChartComponent) => {
 
 	return CartesianChart;
 };
-
-

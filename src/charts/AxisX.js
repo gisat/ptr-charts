@@ -7,7 +7,7 @@ import moment from 'moment';
 // import 'moment/locale/cs';
 
 import './style.scss';
-import AxisLabel from "./AxisLabel";
+import AxisLabel from './AxisLabel';
 
 const TICK_SIZE = 5; // TODO optional?
 const MIN_TICK_COUNT = 5;
@@ -16,7 +16,6 @@ const TICK_CAPTION_OFFSET_TOP = 10;
 const TICK_CAPTION_OFFSET_LEFT = 5;
 
 class AxisX extends React.PureComponent {
-
 	static propTypes = {
 		data: PropTypes.array,
 		scale: PropTypes.func,
@@ -38,12 +37,9 @@ class AxisX extends React.PureComponent {
 		label: PropTypes.bool,
 		options: PropTypes.object,
 
-		diverging: PropTypes.oneOfType([
-			PropTypes.string,
-			PropTypes.bool
-		]),
+		diverging: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
 		yScale: PropTypes.func,
-		yOptions: PropTypes.object
+		yOptions: PropTypes.object,
 	};
 
 	constructor(props) {
@@ -54,8 +50,13 @@ class AxisX extends React.PureComponent {
 		const props = this.props;
 
 		return (
-			<g className="ptr-column-chart-axis-x" transform={`translate(${props.leftMargin},0)`}>
-				{(props.ticks || props.gridlines || props.withValues) ? this.renderGrid() : null}
+			<g
+				className="ptr-column-chart-axis-x"
+				transform={`translate(${props.leftMargin},0)`}
+			>
+				{props.ticks || props.gridlines || props.withValues
+					? this.renderGrid()
+					: null}
 				{this.renderBaseline()}
 				{props.border ? this.renderBorder() : null}
 				{props.label ? this.renderLabel() : null}
@@ -69,30 +70,41 @@ class AxisX extends React.PureComponent {
 		let yCoord = props.plotHeight;
 
 		if (props.diverging) {
-			yCoord = props.yScale(props.yOptions && props.yOptions.diversionValue ? props.yOptions.diversionValue : 0) + props.topPadding;
+			yCoord =
+				props.yScale(
+					props.yOptions && props.yOptions.diversionValue
+						? props.yOptions.diversionValue
+						: 0
+				) + props.topPadding;
 		}
 
-		return (
-			yCoord || yCoord === 0 ? (
-				<path
-					className="ptr-axis-baseline"
-					d={`M0 ${yCoord} L${props.width} ${yCoord}`}
-				/>
-			) : null
-		);
+		return yCoord || yCoord === 0 ? (
+			<path
+				className="ptr-axis-baseline"
+				d={`M0 ${yCoord} L${props.width} ${yCoord}`}
+			/>
+		) : null;
 	}
 
 	renderBorder() {
 		return (
 			<>
-				<path className="ptr-axis-border ptr-axis-border-top" d={`M0 1 L${this.props.width} 1`}/>
-				{this.props.diverging ? <path className="ptr-axis-border ptr-axis-border-bottom" d={`M0 ${this.props.plotHeight} L${this.props.width} ${this.props.plotHeight}`}/> : null}
+				<path
+					className="ptr-axis-border ptr-axis-border-top"
+					d={`M0 1 L${this.props.width} 1`}
+				/>
+				{this.props.diverging ? (
+					<path
+						className="ptr-axis-border ptr-axis-border-bottom"
+						d={`M0 ${this.props.plotHeight} L${this.props.width} ${this.props.plotHeight}`}
+					/>
+				) : null}
 			</>
 		);
 	}
 
 	renderGrid() {
-		let shift = this.props.ticks ? (TICK_SIZE) : 0;
+		let shift = this.props.ticks ? TICK_SIZE : 0;
 
 		if (this.props.scaleType === 'ordinal') {
 			return this.renderOrdinalGrid(shift);
@@ -102,22 +114,27 @@ class AxisX extends React.PureComponent {
 	}
 
 	renderLinearGrid(shift) {
-		let ticks = this.props.scale.ticks(this.props.width > 300 ? MAX_TICK_COUNT : MIN_TICK_COUNT);
+		let ticks = this.props.scale.ticks(
+			this.props.width > 300 ? MAX_TICK_COUNT : MIN_TICK_COUNT
+		);
 
 		if (this.props.scaleType === 'logarithmic') {
 			let domain = this.props.scale.domain();
 			let minDigits = domain[0].toString().length;
 			let maxDigits = domain[1].toString().length;
 			ticks = [];
-			for (let i = (minDigits - 1); i <= maxDigits; i++) {
+			for (let i = minDigits - 1; i <= maxDigits; i++) {
 				ticks.push(Math.pow(10, i));
 			}
 		}
 
-		let availableHeight = (this.props.width/ticks.length)/Math.sqrt(2);
+		let availableHeight = this.props.width / ticks.length / Math.sqrt(2);
 
 		return (
-			<g className="ptr-axis-grid" transform={`translate(${this.props.leftPadding}, 0)`}>
+			<g
+				className="ptr-axis-grid"
+				transform={`translate(${this.props.leftPadding}, 0)`}
+			>
 				{ticks.map(value => {
 					let xCoord = this.props.scale(value);
 					let text = value;
@@ -135,7 +152,15 @@ class AxisX extends React.PureComponent {
 									y1={this.props.plotHeight + shift}
 									y2={this.props.gridlines ? 0 : this.props.plotHeight}
 								/>
-								{this.props.withValues ? this.renderValueLabel(null, xCoord, shift, availableHeight, text) : null}
+								{this.props.withValues
+									? this.renderValueLabel(
+											null,
+											xCoord,
+											shift,
+											availableHeight,
+											text
+									  )
+									: null}
 							</g>
 						);
 					} else {
@@ -164,23 +189,23 @@ class AxisX extends React.PureComponent {
 				step = options.tickStep;
 			}
 
-			for (let i = start; i<= props.data.length; i+=step) {
+			for (let i = start; i <= props.data.length; i += step) {
 				data.push(props.data[i]);
 			}
 
 			scale = props.scale.domain(data);
-
-
 		} else {
 			data = props.data;
-
 		}
 
 		let barWidth = scale.bandwidth();
-		let gap = scale.padding()*barWidth;
+		let gap = scale.padding() * barWidth;
 
 		return (
-			<g className="ptr-axis-grid" transform={`translate(${props.leftPadding + barWidth/2}, 0)`}>
+			<g
+				className="ptr-axis-grid"
+				transform={`translate(${props.leftPadding + barWidth / 2}, 0)`}
+			>
 				{data.map(item => {
 					let key = item;
 					let name = item;
@@ -201,7 +226,16 @@ class AxisX extends React.PureComponent {
 									y1={props.plotHeight + shift}
 									y2={props.gridlines ? 0 : props.plotHeight}
 								/>
-								{props.withValues ? this.renderValueLabel(key, xCoord, shift, barWidth + gap, name, item) : null}
+								{props.withValues
+									? this.renderValueLabel(
+											key,
+											xCoord,
+											shift,
+											barWidth + gap,
+											name,
+											item
+									  )
+									: null}
 							</g>
 						);
 					} else {
@@ -214,13 +248,14 @@ class AxisX extends React.PureComponent {
 
 	renderValueLabel(key, x, yShift, availableHeight, text, originalData) {
 		let finalY = this.props.plotHeight + yShift + TICK_CAPTION_OFFSET_TOP;
-		let maxHeight = ((this.props.height  - yShift - TICK_CAPTION_OFFSET_TOP) * Math.sqrt(2));
+		let maxHeight =
+			(this.props.height - yShift - TICK_CAPTION_OFFSET_TOP) * Math.sqrt(2);
 
 		if (this.props.scaleType === 'time') {
 			let time = moment(text);
-			if (this.props.options){
+			if (this.props.options) {
 				if (this.props.options.timeValueLanguage) {
-					time = time.locale(this.props.options.timeValueLanguage)
+					time = time.locale(this.props.options.timeValueLanguage);
 				}
 
 				if (this.props.options.axisValueFormat) {
@@ -234,7 +269,14 @@ class AxisX extends React.PureComponent {
 
 		if (this.props.options && this.props.options.valueLabelRenderer) {
 			// TODO fix available width
-			return this.props.options.valueLabelRenderer(x, finalY, availableHeight, maxHeight, text, originalData);
+			return this.props.options.valueLabelRenderer(
+				x,
+				finalY,
+				availableHeight,
+				maxHeight,
+				text,
+				originalData
+			);
 		} else if (availableHeight > 15) {
 			return (
 				<g
@@ -260,7 +302,7 @@ class AxisX extends React.PureComponent {
 
 	renderLabel() {
 		const props = this.props;
-		let content = "";
+		let content = '';
 
 		if (props.options) {
 			if (props.options.name) {
@@ -268,17 +310,18 @@ class AxisX extends React.PureComponent {
 			}
 
 			if (props.options.unit) {
-				content += " (" + props.options.unit + ")"
+				content += ' (' + props.options.unit + ')';
 			}
-
 		} else {
-			content = "Axis X";
+			content = 'Axis X';
 		}
 
 		return (
 			<g
 				transform={`
-						translate(${props.width/2} ${props.plotHeight + props.height + props.labelSize - 3})
+						translate(${props.width / 2} ${
+					props.plotHeight + props.height + props.labelSize - 3
+				})
 					`}
 			>
 				<AxisLabel
@@ -294,4 +337,3 @@ class AxisX extends React.PureComponent {
 }
 
 export default AxisX;
-

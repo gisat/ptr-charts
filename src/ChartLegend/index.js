@@ -18,7 +18,7 @@ class ChartLegend extends React.PureComponent {
 		colorSourcePath: PropTypes.string,
 		colorScale: PropTypes.func,
 		numericLink: PropTypes.bool,
-		showSelectedOnly: PropTypes.bool
+		showSelectedOnly: PropTypes.bool,
 	};
 
 	constructor(props) {
@@ -45,7 +45,8 @@ class ChartLegend extends React.PureComponent {
 
 	render() {
 		let legendItems = [];
-		let selectedItems = this.props.showSelectedOnly && this.context && this.context.selectedItems;
+		let selectedItems =
+			this.props.showSelectedOnly && this.context && this.context.selectedItems;
 
 		_.forEach(this.props.data, (item, index) => {
 			let key = _.get(item, this.props.keySourcePath);
@@ -59,18 +60,18 @@ class ChartLegend extends React.PureComponent {
 			}
 
 			let name = _.get(item, this.props.nameSourcePath);
-			let numericLink = this.props.numericLink ? (index + 1) : null;
+			let numericLink = this.props.numericLink ? index + 1 : null;
 
 			let iconStyle = {
-				background: color
+				background: color,
 			};
 
-			let itemClasses = classnames("ptr-chart-legend-item", {
-				withNumbers: !!this.props.numericLink
+			let itemClasses = classnames('ptr-chart-legend-item', {
+				withNumbers: !!this.props.numericLink,
 			});
 
-			let iconClasses = classnames("ptr-chart-legend-item-icon", {
-				dark: color ? chroma(color).luminance() < 0.35 : false
+			let iconClasses = classnames('ptr-chart-legend-item-icon', {
+				dark: color ? chroma(color).luminance() < 0.35 : false,
 			});
 
 			let content = (
@@ -81,8 +82,12 @@ class ChartLegend extends React.PureComponent {
 					onMouseMove={this.onMouseMove.bind(this, key)}
 					onMouseOut={this.onMouseOut.bind(this, key)}
 				>
-					<div className={iconClasses} style={iconStyle}>{numericLink}</div>
-					<div className="ptr-chart-legend-item-name" title={name}>{name}</div>
+					<div className={iconClasses} style={iconStyle}>
+						{numericLink}
+					</div>
+					<div className="ptr-chart-legend-item-name" title={name}>
+						{name}
+					</div>
 				</div>
 			);
 
@@ -96,13 +101,8 @@ class ChartLegend extends React.PureComponent {
 			}
 		});
 
-		return (
-			<div className="ptr-chart-legend">
-				{legendItems}
-			</div>
-		);
+		return <div className="ptr-chart-legend">{legendItems}</div>;
 	}
 }
 
 export default ChartLegend;
-
