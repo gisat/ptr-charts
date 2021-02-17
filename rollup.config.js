@@ -2,7 +2,9 @@ import babel from "rollup-plugin-babel";
 import commonjs from "@rollup/plugin-commonjs";
 import filesize from "rollup-plugin-filesize";
 import postcss from 'rollup-plugin-postcss';
-import postcssUrl from './build/plugins/postcssUrl'
+import postcssUrl from './build/plugins/postcssUrl';
+import alias from "@rollup/plugin-alias";
+import path from "path";
 
 const env = process.env.NODE_ENV;
 const pkg = require("./package.json");
@@ -59,6 +61,7 @@ export default {
     '@gisatcz/ptr-atoms',
     '@gisatcz/ptr-utils',
     '@gisatcz/ptr-locales',
+    '@gisatcz/cross-package-react-context',
     'react-rnd',
     ...lodashExternal
   ],
@@ -82,8 +85,7 @@ export default {
         include: 'node_modules/**',
     }),
     postcss({
-      // modules: true,
-      extract: 'dist/style.css',
+	  extract: path.resolve(Paths.DIST + '/style.css'),
       plugins: [
         ...postcssUrl({
           basePath: [Paths.SRC, Paths.NODE_MODULES],
@@ -93,5 +95,12 @@ export default {
       ]
     }),
     filesize(),
+    // TODO figure out dev and prod version
+    alias({
+      entries: [
+        // { find: '@gisatcz/ptr-core', replacement: 'C:/Users/pvlach/DATA/ptr-core' },
+        // { find: '@gisatcz/cross-package-react-context', replacement: 'C:/Users/pvlach/DATA/cross-package-react-context' }
+      ]
+    })
   ]
 };
