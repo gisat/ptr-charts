@@ -9,13 +9,13 @@
 .ptr-chart-legend-item {
 	display: flex;
 	align-items: center;
-	padding: 0 .3rem;
-	margin-right: .3rem;
+	padding: 0 0.3rem;
+	margin-right: 0.3rem;
 	cursor: default;
 }
 
 .ptr-chart-legend-item.withNumbers {
-	padding: .2rem .3rem;
+	padding: 0.2rem 0.3rem;
 }
 
 .ptr-chart-legend-item:hover {
@@ -23,8 +23,8 @@
 }
 
 .ptr-chart-legend-item-icon {
-	min-width: .7rem;
-	height: .7rem;
+	min-width: 0.7rem;
+	height: 0.7rem;
 	font-size: $b1;
 	line-height: 1.25rem;
 	text-align: center;
@@ -43,7 +43,7 @@
 .ptr-chart-legend-item-name {
 	font-size: $b1;
 	color: var(--base75);
-	padding: 0 0 0 .3rem;
+	padding: 0 0 0 0.3rem;
 	max-width: 12rem;
 	white-space: nowrap;
 	overflow: hidden;

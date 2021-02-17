@@ -11,25 +11,16 @@ class Point extends React.PureComponent {
 	static contextType = Context.getContext('HoverContext');
 
 	static propTypes = {
-		itemKey: PropTypes.oneOfType([
-			PropTypes.string,
-			PropTypes.number
-		]),
+		itemKey: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 		data: PropTypes.object,
-		name: PropTypes.oneOfType([
-			PropTypes.string,
-			PropTypes.number
-		]),
+		name: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 		x: PropTypes.number,
 		y: PropTypes.number,
 		r: PropTypes.number,
 		onMouseMove: PropTypes.func,
 		onMouseOut: PropTypes.func,
 		onMouseOver: PropTypes.func,
-		color: PropTypes.oneOfType([
-			PropTypes.string,
-			PropTypes.object
-		]),
+		color: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
 		highlighted: PropTypes.bool,
 
 		xScaleType: PropTypes.string,
@@ -44,7 +35,7 @@ class Point extends React.PureComponent {
 		standalone: PropTypes.bool,
 		siblings: PropTypes.array,
 		symbol: PropTypes.string,
-		hidden: PropTypes.bool
+		hidden: PropTypes.bool,
 	};
 
 	constructor(props) {
@@ -56,8 +47,8 @@ class Point extends React.PureComponent {
 		this.onClick = this.onClick.bind(this);
 
 		this.state = {
-			radius: props.r
-		}
+			radius: props.r,
+		};
 	}
 
 	onClick() {
@@ -76,14 +67,14 @@ class Point extends React.PureComponent {
 				popup: {
 					x: e.pageX,
 					y: e.pageY,
-					content: this.getPopupContent()
-				}
+					content: this.getPopupContent(),
+				},
 			});
 		}
 
 		if (!this.props.zSourcePath) {
 			this.setState({
-				radius: this.props.r + 3
+				radius: this.props.r + 3,
 			});
 		}
 	}
@@ -98,14 +89,14 @@ class Point extends React.PureComponent {
 				popup: {
 					x: e.pageX,
 					y: e.pageY,
-					content: this.getPopupContent()
-				}
+					content: this.getPopupContent(),
+				},
 			});
 		}
 
 		if (!this.props.zSourcePath) {
 			this.setState({
-				radius: this.props.r + 3
+				radius: this.props.r + 3,
 			});
 		}
 	}
@@ -120,7 +111,7 @@ class Point extends React.PureComponent {
 		}
 
 		this.setState({
-			radius: this.props.r
+			radius: this.props.r,
 		});
 	}
 
@@ -129,28 +120,43 @@ class Point extends React.PureComponent {
 		let suppressed = false;
 
 		/* Handle context */
-		if (this.context && (this.context.hoveredItems || this.context.selectedItems) && this.props.itemKey && this.props.siblings) {
-			let hoverIntersection = _.intersection(this.context.hoveredItems, this.props.siblings);
-			let selectIntersection = _.intersection(this.context.selectedItems, this.props.siblings);
+		if (
+			this.context &&
+			(this.context.hoveredItems || this.context.selectedItems) &&
+			this.props.itemKey &&
+			this.props.siblings
+		) {
+			let hoverIntersection = _.intersection(
+				this.context.hoveredItems,
+				this.props.siblings
+			);
+			let selectIntersection = _.intersection(
+				this.context.selectedItems,
+				this.props.siblings
+			);
 			let isHovered = _.indexOf(hoverIntersection, this.props.itemKey);
 			let isSelected = _.indexOf(selectIntersection, this.props.itemKey);
 
-			if ((!!hoverIntersection.length || !!selectIntersection.length) && isHovered === -1 && isSelected === -1) {
+			if (
+				(!!hoverIntersection.length || !!selectIntersection.length) &&
+				isHovered === -1 &&
+				isSelected === -1
+			) {
 				suppressed = true;
 			}
 		}
 
-		let classes = classnames("ptr-chart-point", {
+		let classes = classnames('ptr-chart-point', {
 			'no-opacity': this.props.highlighted,
-			'standalone': this.props.standalone
+			standalone: this.props.standalone,
 		});
 
 		let style = {};
 		if (props.color) {
-			style.fill = props.color
+			style.fill = props.color;
 		}
 		if (suppressed) {
-			style.opacity = .25;
+			style.opacity = 0.25;
 		} else if (!this.props.hidden) {
 			style.opacity = 1;
 		}
@@ -164,7 +170,14 @@ class Point extends React.PureComponent {
 		}
 
 		if (props.symbol === 'plus') {
-			return this.renderPlusSymbol(props.itemKey, props.x, props.y, this.state.radius, classes, style);
+			return this.renderPlusSymbol(
+				props.itemKey,
+				props.x,
+				props.y,
+				this.state.radius,
+				classes,
+				style
+			);
 		} else {
 			return (
 				<circle
@@ -179,7 +192,7 @@ class Point extends React.PureComponent {
 					r={this.state.radius}
 					style={style}
 				/>
-			)
+			);
 		}
 	}
 
@@ -200,18 +213,16 @@ class Point extends React.PureComponent {
 				onMouseMove={this.onMouseMove}
 				onMouseOut={this.onMouseOut}
 				onClick={this.onClick}
-				width={2*radius}
-				height={2*radius}
+				width={2 * radius}
+				height={2 * radius}
 			>
-				<circle
-					style={{opacity: 0}}
-					cx={x}
-					cy={y}
-					r={this.state.radius}
-				/>
+				<circle style={{opacity: 0}} cx={x} cy={y} r={this.state.radius} />
 				<path
 					style={pathStyle}
-					d={`M${x},${y-radius} L${x},${y+radius} M${x-radius},${y} L${x+radius},${y}`}/>
+					d={`M${x},${y - radius} L${x},${y + radius} M${x - radius},${y} L${
+						x + radius
+					},${y}`}
+				/>
 			</g>
 		);
 	}
@@ -225,9 +236,9 @@ class Point extends React.PureComponent {
 		let yUnits = props.yOptions && props.yOptions.unit;
 		let zUnits = props.zOptions && props.zOptions.unit;
 
-		let xName = props.xOptions && props.xOptions.name || 'X value';
-		let yName = props.yOptions && props.yOptions.name || 'Y value';
-		let zName = props.zOptions && props.zOptions.name || 'Z value';
+		let xName = (props.xOptions && props.xOptions.name) || 'X value';
+		let yName = (props.yOptions && props.yOptions.name) || 'Y value';
+		let zName = (props.zOptions && props.zOptions.name) || 'Z value';
 
 		let color = this.props.color;
 
@@ -236,11 +247,11 @@ class Point extends React.PureComponent {
 		let zValue = _.get(props.data, props.zSourcePath);
 
 		let xValueString = xValue;
-		if (props.xScaleType === "time") {
+		if (props.xScaleType === 'time') {
 			let time = moment(xValueString);
-			if (props.xOptions){
+			if (props.xOptions) {
 				if (props.xOptions.timeValueLanguage) {
-					time = time.locale(props.xOptions.timeValueLanguage)
+					time = time.locale(props.xOptions.timeValueLanguage);
 				}
 
 				if (props.xOptions.popupValueFormat) {
@@ -250,17 +261,17 @@ class Point extends React.PureComponent {
 				}
 			}
 			xValueString = time;
-		} else if (xValue && (xValue % 1) !== 0) {
+		} else if (xValue && xValue % 1 !== 0) {
 			xValueString = xValueString.toFixed(2);
 		}
 
 		let yValueString = yValue;
-		if (yValue && (yValue % 1) !== 0) {
+		if (yValue && yValue % 1 !== 0) {
 			yValueString = yValueString.toFixed(2);
 		}
 
 		let zValueString = zValue;
-		if (zValue && (zValue % 1) !== 0) {
+		if (zValue && zValue % 1 !== 0) {
 			zValueString = zValueString.toFixed(2);
 		}
 
@@ -276,18 +287,22 @@ class Point extends React.PureComponent {
 				</div>
 				<div className="ptr-popup-record-group">
 					<div className="ptr-popup-record">
-						{<div className="ptr-popup-record-attribute">{xName}</div> }
+						{<div className="ptr-popup-record-attribute">{xName}</div>}
 						<div className="ptr-popup-record-value-group">
-							{xValueString || xValueString === 0 ? <span className="value">{xValueString.toLocaleString()}</span> : null}
+							{xValueString || xValueString === 0 ? (
+								<span className="value">{xValueString.toLocaleString()}</span>
+							) : null}
 							{xUnits ? <span className="unit">{xUnits}</span> : null}
 						</div>
 					</div>
 				</div>
 				<div className="ptr-popup-record-group">
 					<div className="ptr-popup-record">
-						{<div className="ptr-popup-record-attribute">{yName}</div> }
+						{<div className="ptr-popup-record-attribute">{yName}</div>}
 						<div className="ptr-popup-record-value-group">
-							{yValueString || yValueString === 0 ? <span className="value">{yValueString.toLocaleString()}</span> : null}
+							{yValueString || yValueString === 0 ? (
+								<span className="value">{yValueString.toLocaleString()}</span>
+							) : null}
 							{yUnits ? <span className="unit">{yUnits}</span> : null}
 						</div>
 					</div>
@@ -295,9 +310,11 @@ class Point extends React.PureComponent {
 				{this.props.zSourcePath ? (
 					<div className="ptr-popup-record-group">
 						<div className="ptr-popup-record">
-							{<div className="ptr-popup-record-attribute">{zName}</div> }
+							{<div className="ptr-popup-record-attribute">{zName}</div>}
 							<div className="ptr-popup-record-value-group">
-								{zValueString || zValueString === 0 ? <span className="value">{zValueString.toLocaleString()}</span> : null}
+								{zValueString || zValueString === 0 ? (
+									<span className="value">{zValueString.toLocaleString()}</span>
+								) : null}
 								{zUnits ? <span className="unit">{zUnits}</span> : null}
 							</div>
 						</div>
@@ -309,4 +326,3 @@ class Point extends React.PureComponent {
 }
 
 export default Point;
-

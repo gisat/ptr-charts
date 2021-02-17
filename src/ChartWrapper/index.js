@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import ReactResizeDetector from 'react-resize-detector';
 import domToImage from 'dom-to-image';
-import download from "downloadjs";
+import download from 'downloadjs';
 
 import './style.scss';
 import {Button, Loader, Menu, MenuItem} from '@gisatcz/ptr-atoms';
@@ -13,21 +13,18 @@ class ChartWrapper extends React.PureComponent {
 	static propTypes = {
 		title: PropTypes.string,
 		subtitle: PropTypes.string,
-		statusBar: PropTypes.oneOfType([
-			PropTypes.element,
-			PropTypes.array
-		]),
+		statusBar: PropTypes.oneOfType([PropTypes.element, PropTypes.array]),
 		onMount: PropTypes.func,
 		onUnmount: PropTypes.func,
 		loading: PropTypes.bool,
 		enableExport: PropTypes.bool,
-		wrapperKey: PropTypes.string
+		wrapperKey: PropTypes.string,
 	};
 
 	constructor(props) {
 		super(props);
 		this.state = {
-			loadingStatus: this.props.loading ? 'open' : 'close'
+			loadingStatus: this.props.loading ? 'open' : 'close',
 		};
 
 		this.export = this.export.bind(this);
@@ -47,12 +44,12 @@ class ChartWrapper extends React.PureComponent {
 
 	export() {
 		let menuButton = document.activeElement;
-		menuButton.style.visibility = "hidden";
+		menuButton.style.visibility = 'hidden';
 		let areaToExport = document.getElementById(this.props.wrapperKey);
 
-		setTimeout(()=>{
+		setTimeout(() => {
 			domToImage.toPng(areaToExport).then(function (dataUrl) {
-				menuButton.style.visibility = "visible";
+				menuButton.style.visibility = 'visible';
 				download(dataUrl, 'chart.png');
 			});
 		}, 500);
@@ -61,25 +58,25 @@ class ChartWrapper extends React.PureComponent {
 	componentDidUpdate(prevProps, prevState, snapshot) {
 		if (prevProps.loading && !this.props.loading) {
 			this.setState({
-				loadingStatus: 'closing'
+				loadingStatus: 'closing',
 			});
 
 			let self = this;
 			setTimeout(() => {
 				self.setState({
-					loadingStatus: 'close'
+					loadingStatus: 'close',
 				});
 			}, 700);
 		} else if (!prevProps.loading && this.props.loading) {
 			this.setState({
-				loadingStatus: 'open'
+				loadingStatus: 'open',
 			});
 		}
 	}
 
-	render() {		
-		let classes = classnames("ptr-chart-wrapper-header", {
-			'with-subtitle': !!this.props.subtitle
+	render() {
+		let classes = classnames('ptr-chart-wrapper-header', {
+			'with-subtitle': !!this.props.subtitle,
 		});
 
 		let chartProps = {};
@@ -89,7 +86,8 @@ class ChartWrapper extends React.PureComponent {
 
 		return (
 			<div className="ptr-chart-wrapper" id={this.props.wrapperKey}>
-				{this.state.loadingStatus === 'open' ||  this.state.loadingStatus === 'closing' ? (
+				{this.state.loadingStatus === 'open' ||
+				this.state.loadingStatus === 'closing' ? (
 					<div className="ptr-chart-wrapper-loader">
 						<Loader
 							fadeOut={this.state.loadingStatus === 'closing'}
@@ -99,26 +97,47 @@ class ChartWrapper extends React.PureComponent {
 						/>
 					</div>
 				) : null}
-				{this.state.loadingStatus === 'close' ||  this.state.loadingStatus === 'closing' ? (
+				{this.state.loadingStatus === 'close' ||
+				this.state.loadingStatus === 'closing' ? (
 					<>
 						<div className={classes}>
 							<div className="ptr-chart-wrapper-titles">
-								<div className="ptr-chart-wrapper-title" title={this.props.title}>{this.props.title}</div>
+								<div
+									className="ptr-chart-wrapper-title"
+									title={this.props.title}
+								>
+									{this.props.title}
+								</div>
 								{this.props.subtitle ? (
-									<div className="ptr-chart-wrapper-subtitle" title={this.props.subtitle}>{this.props.subtitle}</div>
+									<div
+										className="ptr-chart-wrapper-subtitle"
+										title={this.props.subtitle}
+									>
+										{this.props.subtitle}
+									</div>
 								) : null}
 							</div>
 							<div className="ptr-chart-wrapper-tools">
 								{this.props.enableExport ? this.renderMenu() : null}
 							</div>
 						</div>
-						{this.props.statusBar ? (<div className="ptr-chart-wrapper-status-bar">{this.props.statusBar}</div>) : null}
+						{this.props.statusBar ? (
+							<div className="ptr-chart-wrapper-status-bar">
+								{this.props.statusBar}
+							</div>
+						) : null}
 						<div className="ptr-chart-wrapper-content">
-							<ReactResizeDetector handleWidth handleHeight render={({width, height}) => {
-								let remWidth = width/utils.getRemSize();
-								return React.cloneElement(this.props.children, {...chartProps, width: remWidth ? remWidth : null})
-							}}>
-							</ReactResizeDetector>
+							<ReactResizeDetector
+								handleWidth
+								handleHeight
+								render={({width, height}) => {
+									let remWidth = width / utils.getRemSize();
+									return React.cloneElement(this.props.children, {
+										...chartProps,
+										width: remWidth ? remWidth : null,
+									});
+								}}
+							></ReactResizeDetector>
 						</div>
 					</>
 				) : null}
@@ -129,9 +148,11 @@ class ChartWrapper extends React.PureComponent {
 	renderMenu() {
 		return (
 			<div className="ptr-chart-wrapper-tool">
-				<Button icon="dots" invisible onClick={()=>{}}>
+				<Button icon="dots" invisible onClick={() => {}}>
 					<Menu bottom left>
-						{this.props.enableExport ? <MenuItem onClick={this.export}>Download as PNG</MenuItem> : null}
+						{this.props.enableExport ? (
+							<MenuItem onClick={this.export}>Download as PNG</MenuItem>
+						) : null}
 					</Menu>
 				</Button>
 			</div>
@@ -140,4 +161,3 @@ class ChartWrapper extends React.PureComponent {
 }
 
 export default ChartWrapper;
-

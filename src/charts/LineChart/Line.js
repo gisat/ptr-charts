@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import _ from 'lodash';
-import moment from "moment";
+import moment from 'moment';
 
 import '../style.scss';
-import Point from "../Point";
+import Point from '../Point';
 
 import Context from '@gisatcz/cross-package-react-context';
 
@@ -13,17 +13,11 @@ class Line extends React.PureComponent {
 	static contextType = Context.getContext('HoverContext');
 
 	static propTypes = {
-		itemKey: PropTypes.oneOfType([
-			PropTypes.string,
-			PropTypes.number
-		]),
+		itemKey: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 		name: PropTypes.string,
 		coordinates: PropTypes.array,
 		defaultColor: PropTypes.string,
-		highlightColor: PropTypes.oneOfType([
-			PropTypes.string,
-			PropTypes.object
-		]),
+		highlightColor: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
 		highlighted: PropTypes.bool,
 		withPoints: PropTypes.bool,
 		pointOptions: PropTypes.object,
@@ -35,7 +29,7 @@ class Line extends React.PureComponent {
 		pointValueSourcePath: PropTypes.string,
 		yOptions: PropTypes.object,
 		xScaleType: PropTypes.string,
-		xOptions: PropTypes.object
+		xOptions: PropTypes.object,
 	};
 
 	constructor(props) {
@@ -49,9 +43,9 @@ class Line extends React.PureComponent {
 		this.onClick = this.onClick.bind(this);
 
 		this.state = {
-			color: (!props.gray && props.defaultColor) ? props.defaultColor : null,
-			length: null
-		}
+			color: !props.gray && props.defaultColor ? props.defaultColor : null,
+			length: null,
+		};
 	}
 
 	onClick() {
@@ -67,8 +61,8 @@ class Line extends React.PureComponent {
 					x: e.pageX,
 					y: e.pageY,
 					content: this.getPopupContent(data),
-					data: {...this.props, ...data}
-				}
+					data: {...this.props, ...data},
+				},
 			});
 		}
 
@@ -82,8 +76,8 @@ class Line extends React.PureComponent {
 					x: e.pageX,
 					y: e.pageY,
 					content: this.getPopupContent(data),
-					data: {...this.props, ...data}
-				}
+					data: {...this.props, ...data},
+				},
 			});
 		}
 
@@ -106,7 +100,11 @@ class Line extends React.PureComponent {
 	componentDidUpdate(prevProps) {
 		this.updateLength();
 
-		if (prevProps.gray !== this.props.gray || prevProps.highlighted !== this.props.highlighted || prevProps.suppressed !== this.props.suppressed) {
+		if (
+			prevProps.gray !== this.props.gray ||
+			prevProps.highlighted !== this.props.highlighted ||
+			prevProps.suppressed !== this.props.suppressed
+		) {
 			this.setColor();
 		}
 	}
@@ -120,11 +118,15 @@ class Line extends React.PureComponent {
 
 	setColor(forceHover) {
 		if (this.props.highlighted || forceHover) {
-			this.setState({color: this.props.highlightColor ? this.props.highlightColor : null});
+			this.setState({
+				color: this.props.highlightColor ? this.props.highlightColor : null,
+			});
 		} else if (this.props.gray) {
 			this.setState({color: null});
 		} else {
-			this.setState({color: this.props.defaultColor ? this.props.defaultColor : null});
+			this.setState({
+				color: this.props.defaultColor ? this.props.defaultColor : null,
+			});
 		}
 	}
 
@@ -136,15 +138,25 @@ class Line extends React.PureComponent {
 		let highlighted = this.props.highlighted;
 
 		/* Handle context */
-		if (this.context && (this.context.hoveredItems || this.context.selectedItems)) {
+		if (
+			this.context &&
+			(this.context.hoveredItems || this.context.selectedItems)
+		) {
 			let isHovered = _.includes(this.context.hoveredItems, this.props.itemKey);
-			let isSelected = _.includes(this.context.selectedItems, this.props.itemKey);
+			let isSelected = _.includes(
+				this.context.selectedItems,
+				this.props.itemKey
+			);
 			highlighted = isHovered || isSelected;
 
-			if (!this.props.gray && this.props.siblings && (
-				!!_.intersection(this.context.hoveredItems, this.props.siblings).length ||
-				!!_.intersection(this.context.selectedItems, this.props.siblings).length
-			)) {
+			if (
+				!this.props.gray &&
+				this.props.siblings &&
+				(!!_.intersection(this.context.hoveredItems, this.props.siblings)
+					.length ||
+					!!_.intersection(this.context.selectedItems, this.props.siblings)
+						.length)
+			) {
 				suppressed = !highlighted;
 			}
 
@@ -152,18 +164,17 @@ class Line extends React.PureComponent {
 				color = this.props.highlightColor ? this.props.highlightColor : null;
 			}
 		}
-		let classes = classnames("ptr-line-chart-line-wrapper", {
+		let classes = classnames('ptr-line-chart-line-wrapper', {
 			gray: this.props.gray,
-			highlighted
+			highlighted,
 		});
-
 
 		return (
 			<g
 				className={classes}
 				id={props.itemKey}
 				style={{
-					opacity: suppressed ? .15 : 1
+					opacity: suppressed ? 0.15 : 1,
 				}}
 			>
 				<path
@@ -172,15 +183,17 @@ class Line extends React.PureComponent {
 					onMouseMove={this.onMouseMove}
 					onMouseOut={this.onMouseOut}
 					ref={this.ref}
-					className={"ptr-line-chart-line"}
+					className={'ptr-line-chart-line'}
 					key={props.itemKey}
-					d={`M${props.coordinates.map(point => {
-						return `${point.x} ${point.y}`;
-					}).join(" L")}`}
+					d={`M${props.coordinates
+						.map(point => {
+							return `${point.x} ${point.y}`;
+						})
+						.join(' L')}`}
 					style={{
 						stroke: color,
 						strokeDasharray: this.state.length,
-						strokeDashoffset: this.state.length
+						strokeDashoffset: this.state.length,
 					}}
 				/>
 				{props.withPoints ? this.renderPoints(color, highlighted) : null}
@@ -192,7 +205,7 @@ class Line extends React.PureComponent {
 		const props = this.props;
 		const options = props.pointOptions;
 
-		return props.coordinates.map((point) => {
+		return props.coordinates.map(point => {
 			return (
 				<Point
 					itemKey={props.itemKey}
@@ -204,7 +217,7 @@ class Line extends React.PureComponent {
 					color={color}
 					hidden={this.props.gray}
 					zOptions={{
-						showOnHover: options && options.showOnHover
+						showOnHover: options && options.showOnHover,
 					}}
 					highlighted={highlighted}
 					onMouseOver={this.onMouseOver}
@@ -225,7 +238,7 @@ class Line extends React.PureComponent {
 
 		let pointName = data && _.get(data, props.pointNameSourcePath);
 		let pointValue = data && _.get(data, props.pointValueSourcePath);
-		if (pointName && props.xScaleType !== "time") {
+		if (pointName && props.xScaleType !== 'time') {
 			lineName += ` (${pointName})`;
 		}
 
@@ -240,32 +253,39 @@ class Line extends React.PureComponent {
 					{lineName}
 				</div>
 				<div className="ptr-popup-record-group">
-					{(pointValue || pointValue === 0) ? <div className="ptr-popup-record">
-						{props.xScaleType === "time" ? this.renderPopupContentWithTime(pointName, pointValue, units) :
-							<div className="ptr-popup-record-value-group">
-								{<span className="value">{pointValue.toLocaleString()}</span>}
-								{units ? <span className="unit">{units}</span> : null}
-							</div>
-						}
-					</div> : null}
+					{pointValue || pointValue === 0 ? (
+						<div className="ptr-popup-record">
+							{props.xScaleType === 'time' ? (
+								this.renderPopupContentWithTime(pointName, pointValue, units)
+							) : (
+								<div className="ptr-popup-record-value-group">
+									{<span className="value">{pointValue.toLocaleString()}</span>}
+									{units ? <span className="unit">{units}</span> : null}
+								</div>
+							)}
+						</div>
+					) : null}
 				</div>
 			</>
 		);
 	}
 
-	renderPopupContentWithTime (timeString, pointValue, units) {
+	renderPopupContentWithTime(timeString, pointValue, units) {
 		const props = this.props;
 		let time = timeString;
 
 		if (props.xOptions) {
 			if (props.xOptions.inputValueFormat) {
-				timeString = moment(timeString, props.xOptions.inputValueFormat).toDate();
+				timeString = moment(
+					timeString,
+					props.xOptions.inputValueFormat
+				).toDate();
 			}
 
-			if (props.xScaleType === "time") {
+			if (props.xScaleType === 'time') {
 				let momentTime = moment(timeString);
 				if (props.xOptions.timeValueLanguage) {
-					momentTime = momentTime.locale(props.xOptions.timeValueLanguage)
+					momentTime = momentTime.locale(props.xOptions.timeValueLanguage);
 				}
 
 				if (props.xOptions.popupValueFormat) {
@@ -280,7 +300,7 @@ class Line extends React.PureComponent {
 		return (
 			<div className="ptr-popup-record-group">
 				<div className="ptr-popup-record">
-					{<div className="ptr-popup-record-attribute">{time}</div> }
+					{<div className="ptr-popup-record-attribute">{time}</div>}
 					<div className="ptr-popup-record-value-group">
 						{<span className="value">{pointValue.toLocaleString()}</span>}
 						{units ? <span className="unit">{units}</span> : null}
@@ -292,4 +312,3 @@ class Line extends React.PureComponent {
 }
 
 export default Line;
-

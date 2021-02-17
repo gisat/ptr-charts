@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import _ from 'lodash';
-import Bar from "./Bar";
+import Bar from './Bar';
 
 import './style.scss';
 
@@ -13,15 +13,11 @@ const ANIMATION_DURATION = 1500;
 const ANIMATION_DELAY = 1000;
 
 class BarGroup extends React.PureComponent {
-
 	static contextType = HoverContext;
 
 	static propTypes = {
 		data: PropTypes.object,
-		originalData: PropTypes.oneOfType([
-			PropTypes.array,
-			PropTypes.object
-		]), // used in popups
+		originalData: PropTypes.oneOfType([PropTypes.array, PropTypes.object]), // used in popups
 		itemKeys: PropTypes.array,
 		xScale: PropTypes.func,
 		yScale: PropTypes.func,
@@ -29,10 +25,7 @@ class BarGroup extends React.PureComponent {
 		availableHeight: PropTypes.number,
 		availableWidth: PropTypes.number,
 		defaultColor: PropTypes.string,
-		highlightColor: PropTypes.oneOfType([
-			PropTypes.string,
-			PropTypes.object
-		]),
+		highlightColor: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
 		attributeName: PropTypes.string,
 		attributeUnits: PropTypes.string,
 		maximum: PropTypes.number,
@@ -40,17 +33,14 @@ class BarGroup extends React.PureComponent {
 		baseline: PropTypes.bool,
 		hidden: PropTypes.bool,
 
-		stacked: PropTypes.oneOfType([
-			PropTypes.bool,
-			PropTypes.string
-		])
+		stacked: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
 	};
 
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			highlighted: false
+			highlighted: false,
 		};
 
 		this.onMouseMove = this.onMouseMove.bind(this);
@@ -64,8 +54,8 @@ class BarGroup extends React.PureComponent {
 				popup: {
 					x: e.pageX,
 					y: e.pageY,
-					content: this.getPopupContent()
-				}
+					content: this.getPopupContent(),
+				},
 			});
 		}
 
@@ -78,8 +68,8 @@ class BarGroup extends React.PureComponent {
 				popup: {
 					x: e.pageX,
 					y: e.pageY,
-					content: this.getPopupContent()
-				}
+					content: this.getPopupContent(),
+				},
 			});
 		}
 
@@ -94,7 +84,6 @@ class BarGroup extends React.PureComponent {
 		this.setState({highlighted: false});
 	}
 
-
 	render() {
 		const props = this.props;
 		const data = props.data;
@@ -104,46 +93,68 @@ class BarGroup extends React.PureComponent {
 		const width = props.xScale.bandwidth();
 
 		let highlighted = false;
-		if (this.context && (this.context.hoveredItems || this.context.selectedItems)) {
-			let isHovered = !!_.intersection(this.context.hoveredItems, this.props.itemKeys).length;
-			let isSelected = !!_.intersection(this.context.selectedItems, this.props.itemKeys).length;
+		if (
+			this.context &&
+			(this.context.hoveredItems || this.context.selectedItems)
+		) {
+			let isHovered = !!_.intersection(
+				this.context.hoveredItems,
+				this.props.itemKeys
+			).length;
+			let isSelected = !!_.intersection(
+				this.context.selectedItems,
+				this.props.itemKeys
+			).length;
 			highlighted = isHovered || isSelected;
 		}
 
 		return (
-			<g transform={`translate(${x},0)`}
-			   className="ptr-column-chart-bar-group"
-			   onMouseOver={this.onMouseOver}
-			   onMouseMove={this.onMouseMove}
-			   onMouseOut={this.onMouseOut}
+			<g
+				transform={`translate(${x},0)`}
+				className="ptr-column-chart-bar-group"
+				onMouseOver={this.onMouseOver}
+				onMouseMove={this.onMouseMove}
+				onMouseOut={this.onMouseOut}
 			>
 				{this.renderPlaceholder(width, highlighted)}
 				{data.positive.total || data.positive.total === 0 ? (
 					<g transform={`scale(1,-1) translate(0,-${props.availableHeight})`}>
-						{this.renderPositiveBars(data.positive.data, data.positive.total, y0, width)}
+						{this.renderPositiveBars(
+							data.positive.data,
+							data.positive.total,
+							y0,
+							width
+						)}
 					</g>
 				) : null}
 				{data.negative.total || data.negative.total === 0 ? (
 					<g>
-						{this.renderNegativeBars(data.negative.data, data.negative.total, width)}
+						{this.renderNegativeBars(
+							data.negative.data,
+							data.negative.total,
+							width
+						)}
 					</g>
 				) : null}
-				{props.baseline ? this.renderBaseline(props.availableHeight - y0, width) : null}
+				{props.baseline
+					? this.renderBaseline(props.availableHeight - y0, width)
+					: null}
 			</g>
 		);
 	}
 
 	renderPlaceholder(width, visible) {
-		let classes = classnames("ptr-column-chart-bar-placeholder", {
-			visible
+		let classes = classnames('ptr-column-chart-bar-placeholder', {
+			visible,
 		});
 
 		return (
-			<rect className={classes}
-				  y={0}
-				  x={0}
-				  width={width}
-				  height={this.props.availableHeight}
+			<rect
+				className={classes}
+				y={0}
+				x={0}
+				width={width}
+				height={this.props.availableHeight}
 			/>
 		);
 	}
@@ -155,9 +166,22 @@ class BarGroup extends React.PureComponent {
 
 		_.forEach(data, (item, index) => {
 			let height = props.yScale(props.yBaseValue) - props.yScale(item.value);
-			let transitionDuration = Math.abs(((item.value - props.yBaseValue)*ANIMATION_DURATION)/(props.maximum - props.yBaseValue));
+			let transitionDuration = Math.abs(
+				((item.value - props.yBaseValue) * ANIMATION_DURATION) /
+					(props.maximum - props.yBaseValue)
+			);
 
-			bars.push(this.renderBar(index, item, y0, height, barWidth, transitionDuration, transitionDelay));
+			bars.push(
+				this.renderBar(
+					index,
+					item,
+					y0,
+					height,
+					barWidth,
+					transitionDuration,
+					transitionDelay
+				)
+			);
 
 			y0 += height;
 			transitionDelay += transitionDuration;
@@ -175,9 +199,22 @@ class BarGroup extends React.PureComponent {
 
 		_.forEach(data, (item, index) => {
 			let height = props.yScale(item.value) - props.yScale(props.yBaseValue);
-			let transitionDuration = Math.abs(((item.value - props.yBaseValue)*ANIMATION_DURATION)/(props.yBaseValue - props.minimum));
+			let transitionDuration = Math.abs(
+				((item.value - props.yBaseValue) * ANIMATION_DURATION) /
+					(props.yBaseValue - props.minimum)
+			);
 
-			bars.push(this.renderBar(index, item, y0, height, barWidth, transitionDuration, transitionDelay));
+			bars.push(
+				this.renderBar(
+					index,
+					item,
+					y0,
+					height,
+					barWidth,
+					transitionDuration,
+					transitionDelay
+				)
+			);
 
 			y0 += height;
 			transitionDelay += transitionDuration;
@@ -186,7 +223,15 @@ class BarGroup extends React.PureComponent {
 		return bars;
 	}
 
-	renderBar(index, data, y, height, width, transitionDuration, transitionDelay) {
+	renderBar(
+		index,
+		data,
+		y,
+		height,
+		width,
+		transitionDuration,
+		transitionDelay
+	) {
 		const props = this.props;
 		return (
 			<Bar
@@ -207,8 +252,8 @@ class BarGroup extends React.PureComponent {
 				hidden={props.hidden}
 				transitionDuration={transitionDuration}
 				transitionDelay={transitionDelay}
-				classes={classnames("", {
-					'stacked-relative': props.stacked === "relative"
+				classes={classnames('', {
+					'stacked-relative': props.stacked === 'relative',
 				})}
 			/>
 		);
@@ -233,7 +278,9 @@ class BarGroup extends React.PureComponent {
 		if (_.isArray(props.originalData)) {
 			return (
 				<>
-					{attributeName ? <div className="ptr-popup-header">{attributeName}</div> : null}
+					{attributeName ? (
+						<div className="ptr-popup-header">{attributeName}</div>
+					) : null}
 					{props.originalData.map(record => {
 						// TODO what if more values?
 						let positive = record.positive.data[0];
@@ -246,22 +293,22 @@ class BarGroup extends React.PureComponent {
 						}
 
 						let valueString = value;
-						if ((value % 1) !== 0) {
+						if (value % 1 !== 0) {
 							valueString = valueString.toFixed(2);
 						}
 
 						return (
 							<div key={record.name} className="ptr-popup-record-value-group">
 								{<span className="name">{record.name}:</span>}
-								{valueString || valueString === 0 ? <span className="value">{valueString.toLocaleString()}</span> : null}
+								{valueString || valueString === 0 ? (
+									<span className="value">{valueString.toLocaleString()}</span>
+								) : null}
 								{units ? <span className="unit">{units}</span> : null}
 							</div>
 						);
-
 					})}
 				</>
 			);
-
 		} else {
 			let columnName = props.data.name;
 			let color = props.highlightColor;
@@ -273,10 +320,22 @@ class BarGroup extends React.PureComponent {
 				<>
 					<div className="ptr-popup-header">{columnName}</div>
 					{positiveData.map((record, index) => {
-						return this.getPopupRecordGroup(record, attributeName, units, color, index)
+						return this.getPopupRecordGroup(
+							record,
+							attributeName,
+							units,
+							color,
+							index
+						);
 					})}
 					{data.negative.data.map((record, index) => {
-						return this.getPopupRecordGroup(record, attributeName, units, color, index)
+						return this.getPopupRecordGroup(
+							record,
+							attributeName,
+							units,
+							color,
+							index
+						);
 					})}
 				</>
 			);
@@ -296,27 +355,33 @@ class BarGroup extends React.PureComponent {
 		}
 
 		let valueString = record.value;
-		if ((record.value % 1) !== 0) {
+		if (record.value % 1 !== 0) {
 			valueString = valueString.toFixed(2);
 		}
 
-
 		return (
 			<React.Fragment key={index}>
-				{(valueString || valueString === 0) ? <div className="ptr-popup-record-group">
-					<div className="ptr-popup-record-color" style={style}></div>
-					<div className="ptr-popup-record">
-						{attribute ? <div className="ptr-popup-record-attribute">{attribute}</div> : null}
-						<div className="ptr-popup-record-value-group">
-							{(valueString || valueString === 0) ? <span className="value">{valueString.toLocaleString()}</span> : null}
-							{attributeUnits ? <span className="unit">{attributeUnits}</span> : null}
+				{valueString || valueString === 0 ? (
+					<div className="ptr-popup-record-group">
+						<div className="ptr-popup-record-color" style={style}></div>
+						<div className="ptr-popup-record">
+							{attribute ? (
+								<div className="ptr-popup-record-attribute">{attribute}</div>
+							) : null}
+							<div className="ptr-popup-record-value-group">
+								{valueString || valueString === 0 ? (
+									<span className="value">{valueString.toLocaleString()}</span>
+								) : null}
+								{attributeUnits ? (
+									<span className="unit">{attributeUnits}</span>
+								) : null}
+							</div>
 						</div>
 					</div>
-				</div> : null}
+				) : null}
 			</React.Fragment>
 		);
 	}
 }
 
 export default BarGroup;
-
