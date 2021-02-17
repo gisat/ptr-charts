@@ -6,10 +6,10 @@ import chroma from 'chroma-js';
 
 import './style.scss';
 
-import {utils} from '@gisatcz/ptr-utils'
+import {utils} from '@gisatcz/ptr-utils';
 
-import Node from "./Node";
-import Link from "./Link";
+import Node from './Node';
+import Link from './Link';
 
 class SankeyChart extends React.PureComponent {
 	static defaultProps = {
@@ -26,21 +26,21 @@ class SankeyChart extends React.PureComponent {
 		radialsLabels: false,
 		radialsLabelsSize: 1, // in rem
 
-		startingAngle: Math.PI/2
+		startingAngle: Math.PI / 2,
 	};
 
 	static propTypes = {
 		nodeDefaultColor: PropTypes.string,
 		nodeHighlightedColor: PropTypes.oneOfType([
 			PropTypes.string,
-			PropTypes.object
+			PropTypes.object,
 		]),
 		nodeColorSourcePath: PropTypes.string,
 
 		linkDefaultColor: PropTypes.string,
 		linkHighlightedColor: PropTypes.oneOfType([
 			PropTypes.string,
-			PropTypes.object
+			PropTypes.object,
 		]),
 		linkColorSourcePath: PropTypes.string,
 		linkNameSourcePath: PropTypes.string,
@@ -88,12 +88,15 @@ class SankeyChart extends React.PureComponent {
 		this.state = {
 			width: null,
 			height: null,
-		}
+		};
 	}
 
 	componentDidMount() {
 		this.resize();
-		if (window) window.addEventListener('resize', this.resize.bind(this), {passive: true}); //todo IE
+		if (window)
+			window.addEventListener('resize', this.resize.bind(this), {
+				passive: true,
+			}); //todo IE
 	}
 
 	resize() {
@@ -101,7 +104,7 @@ class SankeyChart extends React.PureComponent {
 			let pxWidth = this.ref.current.clientWidth;
 
 			this.setState({
-				width: pxWidth
+				width: pxWidth,
 			});
 		}
 	}
@@ -110,15 +113,19 @@ class SankeyChart extends React.PureComponent {
 		const props = this.props;
 		let remSize = utils.getRemSize();
 
-		let content, data, width, height  = null;
+		let content,
+			data,
+			width,
+			height = null;
 		if (this.props.width || this.state.width) {
-
 			/* dimensions */
-			width = this.props.width ? this.props.width*remSize : this.state.width;
-			height = this.props.height ? this.props.height*remSize : this.state.height;
+			width = this.props.width ? this.props.width * remSize : this.state.width;
+			height = this.props.height
+				? this.props.height * remSize
+				: this.state.height;
 
-			let minWidth = props.minWidth*remSize;
-			let maxWidth = props.maxWidth*remSize;
+			let minWidth = props.minWidth * remSize;
+			let maxWidth = props.maxWidth * remSize;
 
 			if (width > maxWidth) width = maxWidth;
 			if (width < minWidth) width = minWidth;
@@ -126,28 +133,35 @@ class SankeyChart extends React.PureComponent {
 			// let padding = (props.radials && props.radialsLabels ? props.padding + props.radialsLabelsSize : props.padding) * remSize;
 			let padding = props.padding * remSize;
 
-			let innerWidth = width - 2*padding;
+			let innerWidth = width - 2 * padding;
 
 			/* data preparation */
 			let values = [];
 
 			if (props.data) {
-
 				//TODO -> to props
-				const sankey = d3Sankey.sankey()
+				const sankey = d3Sankey
+					.sankey()
 					.size([width, height])
-					.extent([[5,5], [width-5, height-5]])
+					.extent([
+						[5, 5],
+						[width - 5, height - 5],
+					])
 					.nodeId(d => d.id)
 					.nodeWidth(20)
 					.nodePadding(10)
-					.nodeAlign(d3Sankey.sankeyCenter)
-					//.iterations(1);  //https://bl.ocks.org/micahstubbs/3c0cb0c0de021e0d9653032784c035e9
-		
+					.nodeAlign(d3Sankey.sankeyCenter);
+				//.iterations(1);  //https://bl.ocks.org/micahstubbs/3c0cb0c0de021e0d9653032784c035e9
+
 				let graph = sankey(props.data);
 
 				content = (
 					<>
-						<svg className="ptr-chart ptr-sankey-chart" height={height} width={width}>
+						<svg
+							className="ptr-chart ptr-sankey-chart"
+							height={height}
+							width={width}
+						>
 							{/* {props.data && props.gradientLinks ? this.renderGradients(graph.links) : null} */}
 							{props.data ? this.renderLinks(graph.links) : null}
 							{props.data ? this.renderNodes(graph.nodes) : null}
@@ -163,34 +177,34 @@ class SankeyChart extends React.PureComponent {
 
 			return (
 				<div className="ptr-chart-container centered" ref={this.ref}>
-					<div style={style}>
-						{content}
-					</div>
+					<div style={style}>{content}</div>
 				</div>
 			);
 		}
 	}
 
 	renderGradients(links) {
-		const getGradient = (link) => {
+		const getGradient = link => {
 			const startColor = link.source.color;
 			const stopColor = link.target.color;
-			return (<linearGradient key={`${link.index}_${link.value}`} id={`gradient_link_${link.index}_${link.value}`} gradientUnits="userSpaceOnUse">
-			{/* // return (<linearGradient key={`${link.index}_${link.value}`} id={`gradient_link_${link.index}_${link.value}`} > */}
-				<stop offset={"10%"} stopColor={startColor}></stop>
-				<stop offset={"90%"} stopColor={stopColor}></stop>
-			</linearGradient>)
-		}
+			return (
+				<linearGradient
+					key={`${link.index}_${link.value}`}
+					id={`gradient_link_${link.index}_${link.value}`}
+					gradientUnits="userSpaceOnUse"
+				>
+					{/* // return (<linearGradient key={`${link.index}_${link.value}`} id={`gradient_link_${link.index}_${link.value}`} > */}
+					<stop offset={'10%'} stopColor={startColor}></stop>
+					<stop offset={'90%'} stopColor={stopColor}></stop>
+				</linearGradient>
+			);
+		};
 
 		const gradients = links.map(getGradient);
-		return (
-			<defs>
-				{gradients}
-			</defs>
-		)
+		return <defs>{gradients}</defs>;
 	}
 	renderLinks(links) {
-		const linksElms = links.map((l) => {
+		const linksElms = links.map(l => {
 			let color = _.get(l, `${this.props.linkColorSourcePath}`);
 			let defaultColor = this.props.linkDefaultColor;
 			let highlightedColor = this.props.linkHighlightedColor;
@@ -215,22 +229,20 @@ class SankeyChart extends React.PureComponent {
 					valueSourcePath={this.props.linkValueSourcePath}
 					hoverValueSourcePath={this.props.hoverValueSourcePath}
 					data={{
-						...l
+						...l,
 					}}
 					yOptions={this.props.yOptions}
-					/>
-			)
-		})
+				/>
+			);
+		});
 
-		return (
-			<g>{linksElms}</g>
-		)
+		return <g>{linksElms}</g>;
 	}
 
 	renderNodes(nodes) {
-		const maxNodeDepth = nodes.reduce((max, n) => Math.max(max, n.depth), 0)
+		const maxNodeDepth = nodes.reduce((max, n) => Math.max(max, n.depth), 0);
 
-		const nodesElms = nodes.map((n) => {
+		const nodesElms = nodes.map(n => {
 			let color = _.get(n, `${this.props.nodeColorSourcePath}`);
 			let defaultColor = this.props.nodeDefaultColor;
 			let highlightedColor = this.props.nodeHighlightedColor;
@@ -258,16 +270,14 @@ class SankeyChart extends React.PureComponent {
 					hoverValueSourcePath={this.props.nodeHoverValueSourcePath}
 					maxNodeDepth={maxNodeDepth}
 					data={{
-						...n
+						...n,
 					}}
 					yOptions={this.props.yOptions}
-					/>
-			)
-		})
+				/>
+			);
+		});
 
-		return (
-			<g>{nodesElms}</g>
-		)
+		return <g>{nodesElms}</g>;
 	}
 }
 

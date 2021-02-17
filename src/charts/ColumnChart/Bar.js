@@ -8,11 +8,10 @@ import './style.scss';
 import Context from '@gisatcz/cross-package-react-context';
 const HoverContext = Context.getContext('HoverContext');
 
-const DEFAULT_COLOR = "#2aa8a3";
-const HIGHLIGHT_COLOR = "#2a928e";
+const DEFAULT_COLOR = '#2aa8a3';
+const HIGHLIGHT_COLOR = '#2a928e';
 
 class Bar extends React.PureComponent {
-
 	static contextType = HoverContext;
 
 	static propTypes = {
@@ -23,10 +22,7 @@ class Bar extends React.PureComponent {
 		height: PropTypes.number,
 		width: PropTypes.number,
 		defaultColor: PropTypes.string,
-		highlightColor: PropTypes.oneOfType([
-			PropTypes.string,
-			PropTypes.object
-		]),
+		highlightColor: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
 
 		classes: PropTypes.string,
 
@@ -47,28 +43,28 @@ class Bar extends React.PureComponent {
 		this.state = {
 			height: 0,
 			highlighted: props.highlighted,
-			hidden: props.hidden
-		}
+			hidden: props.hidden,
+		};
 	}
 
 	onMouseMove(e) {
 		this.setState({
 			hidden: false,
-			highlighted: true
+			highlighted: true,
 		});
 	}
 
 	onMouseOver(e) {
 		this.setState({
 			hidden: false,
-			highlighted: true
+			highlighted: true,
 		});
 	}
 
 	onMouseOut(e) {
 		this.setState({
 			hidden: this.props.hidden,
-			highlighted: false
+			highlighted: false,
 		});
 	}
 
@@ -80,7 +76,7 @@ class Bar extends React.PureComponent {
 		this.updateHeight();
 		if (this.props.highlighted !== prevProps.highlighted) {
 			this.setState({
-				highlighted: this.props.highlighted
+				highlighted: this.props.highlighted,
 			});
 		}
 	}
@@ -88,7 +84,7 @@ class Bar extends React.PureComponent {
 	updateHeight() {
 		if (this.props.height !== this.state.height) {
 			this.setState({
-				height: this.props.height
+				height: this.props.height,
 			});
 		}
 	}
@@ -99,11 +95,22 @@ class Bar extends React.PureComponent {
 		let style = {};
 		let highlighted = this.state.highlighted;
 		let defaultColor = props.defaultColor ? props.defaultColor : DEFAULT_COLOR;
-		let highlightColor = props.highlightColor ? props.highlightColor : HIGHLIGHT_COLOR;
+		let highlightColor = props.highlightColor
+			? props.highlightColor
+			: HIGHLIGHT_COLOR;
 
-		if (this.context && (this.context.hoveredItems || this.context.selectedItems)) {
-			let isHovered = !!_.intersection(this.context.hoveredItems, this.props.itemKeys).length;
-			let isSelected = !!_.intersection(this.context.selectedItems, this.props.itemKeys).length;
+		if (
+			this.context &&
+			(this.context.hoveredItems || this.context.selectedItems)
+		) {
+			let isHovered = !!_.intersection(
+				this.context.hoveredItems,
+				this.props.itemKeys
+			).length;
+			let isSelected = !!_.intersection(
+				this.context.selectedItems,
+				this.props.itemKeys
+			).length;
 			highlighted = isHovered || isSelected;
 		}
 
@@ -123,9 +130,13 @@ class Bar extends React.PureComponent {
 			style.transitionDuration = props.transitionDuration + 'ms';
 		}
 
-		let classes = classnames("ptr-column-chart-bar", {
-			hidden: this.state.hidden
-		}, props.classes);
+		let classes = classnames(
+			'ptr-column-chart-bar',
+			{
+				hidden: this.state.hidden,
+			},
+			props.classes
+		);
 
 		return (
 			<rect
@@ -144,4 +155,3 @@ class Bar extends React.PureComponent {
 }
 
 export default Bar;
-

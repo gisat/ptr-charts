@@ -20,14 +20,8 @@ class Segment extends React.PureComponent {
 		maxArcStart: PropTypes.array,
 		maxRadius: PropTypes.number,
 
-		defaultColor: PropTypes.oneOfType([
-			PropTypes.string,
-			PropTypes.object
-		]),
-		highlightColor: PropTypes.oneOfType([
-			PropTypes.string,
-			PropTypes.object
-		]),
+		defaultColor: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+		highlightColor: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
 		strokeWidth: PropTypes.number,
 
 		nameSourcePath: PropTypes.string,
@@ -35,7 +29,7 @@ class Segment extends React.PureComponent {
 		hoverValueSourcePath: PropTypes.string, //path for value to tooltip - by dafault same like value. Used in relative.
 		data: PropTypes.object,
 		relative: PropTypes.bool,
-		siblings: PropTypes.array
+		siblings: PropTypes.array,
 	};
 
 	constructor(props) {
@@ -49,7 +43,7 @@ class Segment extends React.PureComponent {
 
 		this.state = {
 			color: props.defaultColor,
-		}
+		};
 	}
 
 	onMouseMove(e, data) {
@@ -58,8 +52,8 @@ class Segment extends React.PureComponent {
 				popup: {
 					x: e.pageX,
 					y: e.pageY,
-					content: this.getPopupContent(data)
-				}
+					content: this.getPopupContent(data),
+				},
 			});
 		}
 
@@ -72,8 +66,8 @@ class Segment extends React.PureComponent {
 				popup: {
 					x: e.pageX,
 					y: e.pageY,
-					content: this.getPopupContent(data)
-				}
+					content: this.getPopupContent(data),
+				},
 			});
 		}
 
@@ -92,14 +86,17 @@ class Segment extends React.PureComponent {
 		this.setColor();
 	}
 
-	componentDidUpdate(prevProps) {
-	}
+	componentDidUpdate(prevProps) {}
 
 	setColor(forceHover) {
 		if (forceHover) {
-			this.setState({color: this.props.highlightColor ? this.props.highlightColor : null});
+			this.setState({
+				color: this.props.highlightColor ? this.props.highlightColor : null,
+			});
 		} else {
-			this.setState({color: this.props.defaultColor ? this.props.defaultColor : null});
+			this.setState({
+				color: this.props.defaultColor ? this.props.defaultColor : null,
+			});
 		}
 	}
 
@@ -110,15 +107,24 @@ class Segment extends React.PureComponent {
 		let highlighted = false;
 
 		/* Handle context */
-		if (this.context && (this.context.hoveredItems || this.context.selectedItems)) {
+		if (
+			this.context &&
+			(this.context.hoveredItems || this.context.selectedItems)
+		) {
 			let isHovered = _.includes(this.context.hoveredItems, this.props.itemKey);
-			let isSelected = _.includes(this.context.selectedItems, this.props.itemKey);
+			let isSelected = _.includes(
+				this.context.selectedItems,
+				this.props.itemKey
+			);
 			highlighted = isHovered || isSelected;
 
-			if (this.props.siblings && (
-				!!_.intersection(this.context.hoveredItems, this.props.siblings).length ||
-				!!_.intersection(this.context.selectedItems, this.props.siblings).length
-			)) {
+			if (
+				this.props.siblings &&
+				(!!_.intersection(this.context.hoveredItems, this.props.siblings)
+					.length ||
+					!!_.intersection(this.context.selectedItems, this.props.siblings)
+						.length)
+			) {
 				suppressed = !highlighted;
 			}
 
@@ -127,8 +133,8 @@ class Segment extends React.PureComponent {
 			}
 		}
 
-		let placeholderClasses = classnames("ptr-aster-chart-segment-placeholder", {
-			highlighted: highlighted
+		let placeholderClasses = classnames('ptr-aster-chart-segment-placeholder', {
+			highlighted: highlighted,
 		});
 
 		return (
@@ -152,7 +158,7 @@ class Segment extends React.PureComponent {
 					style={{
 						fill: color,
 						strokeWidth: this.props.strokeWidth ? this.props.strokeWidth : 1,
-						opacity: suppressed ? .15 : 1
+						opacity: suppressed ? 0.15 : 1,
 					}}
 					d={`
 						M${props.origin[0]} ${props.origin[1]}
@@ -168,17 +174,17 @@ class Segment extends React.PureComponent {
 	getPopupContent() {
 		const props = this.props;
 		let style = {};
-		
+
 		let segmentName = _.get(props.data, props.nameSourcePath);
 		let color = this.state.color || props.highlightColor;
 		let value = _.get(props.data, props.valueSourcePath);
 		let customValue = _.get(props.data, props.hoverValueSourcePath);
-		
+
 		// TODO pass custom units
-		let units = props.relative ? "%" : null;
-		
+		let units = props.relative ? '%' : null;
+
 		let valueString = value;
-		if (value && (value % 1) !== 0) {
+		if (value && value % 1 !== 0) {
 			valueString = valueString.toFixed(2);
 		}
 
@@ -195,13 +201,23 @@ class Segment extends React.PureComponent {
 				<div className="ptr-popup-record-group">
 					<div className="ptr-popup-record">
 						<div className="ptr-popup-record-value-group">
-							{customValue ? <>
-								<span className="value">{customValue}</span>
-								{units && customValue === value ? <span className="unit">{units}</span> : null}
-							</> : <>
-								{valueString ? <span className="value">{valueString.toLocaleString()}</span> : null}
-								{units ? <span className="unit">{units}</span> : null}
-							</>}
+							{customValue ? (
+								<>
+									<span className="value">{customValue}</span>
+									{units && customValue === value ? (
+										<span className="unit">{units}</span>
+									) : null}
+								</>
+							) : (
+								<>
+									{valueString ? (
+										<span className="value">
+											{valueString.toLocaleString()}
+										</span>
+									) : null}
+									{units ? <span className="unit">{units}</span> : null}
+								</>
+							)}
 						</div>
 					</div>
 				</div>
@@ -211,4 +227,3 @@ class Segment extends React.PureComponent {
 }
 
 export default Segment;
-

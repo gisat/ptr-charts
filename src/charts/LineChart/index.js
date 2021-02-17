@@ -6,10 +6,10 @@ import moment from 'moment';
 
 import '../style.scss';
 
-import Line from "./Line";
+import Line from './Line';
 import {filter, sort} from '@gisatcz/ptr-utils';
-import cartesianChart from "../cartesianChart/cartesianChart";
-import CartesianChartContent from "../cartesianChart/CartesianChartContent";
+import cartesianChart from '../cartesianChart/cartesianChart';
+import CartesianChartContent from '../cartesianChart/CartesianChartContent';
 import ChartLegend from '../../ChartLegend';
 
 class LineChart extends React.PureComponent {
@@ -20,7 +20,7 @@ class LineChart extends React.PureComponent {
 
 		xGridlines: true,
 		xScaleType: 'ordinal',
-		withoutYbaseline: true
+		withoutYbaseline: true,
 	};
 
 	static propTypes = {
@@ -31,7 +31,7 @@ class LineChart extends React.PureComponent {
 		pointOptions: PropTypes.object,
 
 		serieDataSourcePath: PropTypes.string.isRequired,
-		pointNameSourcePath: PropTypes.string //in context of serie (for custom point name in popup) // TODO coplex solution for chart popups
+		pointNameSourcePath: PropTypes.string, //in context of serie (for custom point name in popup) // TODO coplex solution for chart popups
 	};
 
 	constructor(props) {
@@ -43,11 +43,21 @@ class LineChart extends React.PureComponent {
 		const props = this.props;
 
 		/* data preparation */
-		let xDomain, yDomain, xScale, yScale, colors, sortedUniqueXvalues, mode = null;
+		let xDomain,
+			yDomain,
+			xScale,
+			yScale,
+			colors,
+			sortedUniqueXvalues,
+			mode = null;
 		let data = {...props.data};
 
 		if (data) {
-			data = filter.filterDataWithNullValue(data, props.ySourcePath, props.serieDataSourcePath);
+			data = filter.filterDataWithNullValue(
+				data,
+				props.ySourcePath,
+				props.serieDataSourcePath
+			);
 
 			/* domain */
 			let yValues = _.map(data, item => {
@@ -96,8 +106,14 @@ class LineChart extends React.PureComponent {
 			/* scales */
 			if (props.xScaleType === 'time') {
 				if (props.xOptions && props.xOptions.inputValueFormat) {
-					xMinimum = moment(`${xMinimum}`, props.xOptions.inputValueFormat).toDate();
-					xMaximum = moment(`${xMaximum}`, props.xOptions.inputValueFormat).toDate();
+					xMinimum = moment(
+						`${xMinimum}`,
+						props.xOptions.inputValueFormat
+					).toDate();
+					xMaximum = moment(
+						`${xMaximum}`,
+						props.xOptions.inputValueFormat
+					).toDate();
 				} else {
 					xMinimum = new Date(xMinimum);
 					xMaximum = new Date(xMaximum);
@@ -117,8 +133,8 @@ class LineChart extends React.PureComponent {
 					.range([0, props.innerPlotWidth]);
 
 				// adjust range
-				let extension = xScale.bandwidth()/2;
-				xScale.range([0-extension, props.innerPlotWidth + extension]);
+				let extension = xScale.bandwidth() / 2;
+				xScale.range([0 - extension, props.innerPlotWidth + extension]);
 			}
 
 			yScale = d3.scaleLinear();
@@ -129,34 +145,40 @@ class LineChart extends React.PureComponent {
 
 			yScale.domain(yDomain).range([props.innerPlotHeight, 0]);
 
-			colors = d3
-				.scaleOrdinal(d3.schemeCategory10)
-				.domain(props.data.map(record => {return _.get(record, props.keySourcePath)}));
+			colors = d3.scaleOrdinal(d3.schemeCategory10).domain(
+				props.data.map(record => {
+					return _.get(record, props.keySourcePath);
+				})
+			);
 
-			if (props.forceMode){
+			if (props.forceMode) {
 				mode = props.forceMode;
-			} else if (data.length > props.aggregationThreshold && props.xScaleType !== 'time') {
+			} else if (
+				data.length > props.aggregationThreshold &&
+				props.xScaleType !== 'time'
+			) {
 				mode = 'aggregated';
 			} else if (data.length > props.grayingThreshold) {
 				mode = 'gray';
 			}
 		}
 
-
 		return (
 			<>
-				<svg className="ptr-chart ptr-cartesian-chart ptr-line-chart" height={props.height}>
-					{(data) ?
+				<svg
+					className="ptr-chart ptr-cartesian-chart ptr-line-chart"
+					height={props.height}
+				>
+					{data ? (
 						<CartesianChartContent
 							{...props}
 							{...{xScale, yScale, contentData: xDomain}}
 						>
-							{mode === 'aggregated' ?
-								this.renderAggregated(data, props, xScale, yScale) :
-								this.renderLines(data, props, xScale, yScale, colors, mode)
-							}
+							{mode === 'aggregated'
+								? this.renderAggregated(data, props, xScale, yScale)
+								: this.renderLines(data, props, xScale, yScale, colors, mode)}
 						</CartesianChartContent>
-					: null}
+					) : null}
 				</svg>
 				{this.props.legend ? (
 					<ChartLegend
@@ -173,23 +195,27 @@ class LineChart extends React.PureComponent {
 	}
 
 	renderLines(data, props, xScale, yScale, colors, mode) {
-		let leftOffset = props.xScaleType !== 'time' ? xScale.bandwidth()/2 : 0;
-		let siblings = data.map((item) => _.get(item, props.keySourcePath));
+		let leftOffset = props.xScaleType !== 'time' ? xScale.bandwidth() / 2 : 0;
+		let siblings = data.map(item => _.get(item, props.keySourcePath));
 
-		return _.map(data, (item) => {
+		return _.map(data, item => {
 			let serie = _.get(item, props.serieDataSourcePath);
 			let key = _.get(item, props.keySourcePath);
 			let name = _.get(item, props.nameSourcePath);
 			let color = colors(_.get(item, props.keySourcePath));
 
-			serie = this.props.sorting ? sort.sortByOrder(serie, props.sorting) : serie;
+			serie = this.props.sorting
+				? sort.sortByOrder(serie, props.sorting)
+				: serie;
 
 			let coordinates = serie.map(record => {
 				let xValue = _.get(record, props.xSourcePath);
 				let x;
-				if (this.props.xScaleType === "time") {
+				if (this.props.xScaleType === 'time') {
 					if (props.xOptions && props.xOptions.inputValueFormat) {
-						x = xScale(moment(`${xValue}`, props.xOptions.inputValueFormat).toDate());
+						x = xScale(
+							moment(`${xValue}`, props.xOptions.inputValueFormat).toDate()
+						);
 					} else {
 						x = xScale(new Date(xValue));
 					}
@@ -198,7 +224,7 @@ class LineChart extends React.PureComponent {
 				}
 
 				let y = yScale(_.get(record, props.ySourcePath));
-				return {x,y, originalData: record};
+				return {x, y, originalData: record};
 			});
 
 			if (props.colorSourcePath) {
@@ -228,23 +254,29 @@ class LineChart extends React.PureComponent {
 	}
 
 	renderAggregated(data, props, xScale, yScale, colors) {
-		let leftOffset = props.xScaleType !== 'time' ? xScale.bandwidth()/2 : 0;
+		let leftOffset = props.xScaleType !== 'time' ? xScale.bandwidth() / 2 : 0;
 
 		let maxValues = {};
 		let minValues = {};
 		let values = {};
 
-		_.map(data,(record) => {
+		_.map(data, record => {
 			let serie = _.get(record, props.serieDataSourcePath);
-			_.map(serie,(item) => {
+			_.map(serie, item => {
 				let key = _.get(item, props.xSourcePath);
 				let value = _.get(item, props.ySourcePath);
 
-				if ((!maxValues[key] && maxValues[key] !== 0) || maxValues[key] < value) {
+				if (
+					(!maxValues[key] && maxValues[key] !== 0) ||
+					maxValues[key] < value
+				) {
 					maxValues[key] = value;
 				}
 
-				if ((!minValues[key] && minValues[key] !== 0) || minValues[key] > value) {
+				if (
+					(!minValues[key] && minValues[key] !== 0) ||
+					minValues[key] > value
+				) {
 					minValues[key] = value;
 				}
 
@@ -261,14 +293,14 @@ class LineChart extends React.PureComponent {
 		_.forIn(maxValues, (value, key) => {
 			maxValuesForChart.push({
 				[props.xSourcePath]: key,
-				[props.ySourcePath]: value
+				[props.ySourcePath]: value,
 			});
 		});
 
 		let maxCoordinates = maxValuesForChart.map(record => {
 			let x = xScale(_.get(record, props.xSourcePath)) + leftOffset;
 			let y = yScale(_.get(record, props.ySourcePath));
-			return {x,y, originalData: record};
+			return {x, y, originalData: record};
 		});
 
 		// prepare min data for chart
@@ -276,14 +308,14 @@ class LineChart extends React.PureComponent {
 		_.forIn(minValues, (value, key) => {
 			minValuesForChart.push({
 				[props.xSourcePath]: key,
-				[props.ySourcePath]: value
+				[props.ySourcePath]: value,
 			});
 		});
 
 		let minCoordinates = minValuesForChart.map(record => {
 			let x = xScale(_.get(record, props.xSourcePath)) + leftOffset;
 			let y = yScale(_.get(record, props.ySourcePath));
-			return {x,y, originalData: record};
+			return {x, y, originalData: record};
 		});
 
 		// prepare average data for chart
@@ -291,14 +323,14 @@ class LineChart extends React.PureComponent {
 		_.forIn(values, (values, key) => {
 			averageValuesForChart.push({
 				[props.xSourcePath]: key,
-				[props.ySourcePath]: _.sum(values)/values.length
+				[props.ySourcePath]: _.sum(values) / values.length,
 			});
 		});
 
 		let averageCoordinates = averageValuesForChart.map(record => {
 			let x = xScale(_.get(record, props.xSourcePath)) + leftOffset;
 			let y = yScale(_.get(record, props.ySourcePath));
-			return {x,y, originalData: record};
+			return {x, y, originalData: record};
 		});
 
 		let reverseMinCoordinates = _.reverse([...minCoordinates]);
@@ -307,19 +339,23 @@ class LineChart extends React.PureComponent {
 			<>
 				<path
 					className="ptr-line-chart-area"
-					d={`M${maxCoordinates.map(point => {
-						return `${point.x} ${point.y}`;
-					}).join(" L")} L${reverseMinCoordinates.map(point => {
-						return `${point.x} ${point.y}`;
-					}).join(" L")}`}
+					d={`M${maxCoordinates
+						.map(point => {
+							return `${point.x} ${point.y}`;
+						})
+						.join(' L')} L${reverseMinCoordinates
+						.map(point => {
+							return `${point.x} ${point.y}`;
+						})
+						.join(' L')}`}
 				/>
 				<Line
 					key={'minimum'}
 					itemKey={'minimum'}
 					name={'Minimum'}
 					coordinates={minCoordinates}
-					defaultColor={"#777777"}
-					highlightColor={"#555555"}
+					defaultColor={'#777777'}
+					highlightColor={'#555555'}
 					withPoints={this.props.withPoints}
 					pointNameSourcePath={props.pointNameSourcePath || props.xSourcePath}
 					pointValueSourcePath={props.ySourcePath}
@@ -332,8 +368,12 @@ class LineChart extends React.PureComponent {
 					name={'Average'}
 					coordinates={averageCoordinates}
 					withPoints={this.props.withPoints}
-					defaultColor={this.props.defaultColor ? this.props.defaultColor : "#0088ff"}
-					highlightColor={this.props.highlightColor ? this.props.highlightColor : "#0077ff"}
+					defaultColor={
+						this.props.defaultColor ? this.props.defaultColor : '#0088ff'
+					}
+					highlightColor={
+						this.props.highlightColor ? this.props.highlightColor : '#0077ff'
+					}
 					pointNameSourcePath={props.pointNameSourcePath || props.xSourcePath}
 					pointValueSourcePath={props.ySourcePath}
 					yOptions={props.yOptions}
@@ -343,8 +383,8 @@ class LineChart extends React.PureComponent {
 					itemKey={'maximum'}
 					name={'Maximum'}
 					coordinates={maxCoordinates}
-					defaultColor={"#777777"}
-					highlightColor={"#555555"}
+					defaultColor={'#777777'}
+					highlightColor={'#555555'}
 					withPoints={this.props.withPoints}
 					pointNameSourcePath={props.pointNameSourcePath || props.xSourcePath}
 					pointValueSourcePath={props.ySourcePath}
@@ -357,4 +397,3 @@ class LineChart extends React.PureComponent {
 }
 
 export default cartesianChart(LineChart);
-

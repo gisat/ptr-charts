@@ -4,11 +4,11 @@ import _ from 'lodash';
 import * as d3 from 'd3';
 
 import './style.scss';
-import Point from "../Point";
+import Point from '../Point';
 
 import {filter, sort} from '@gisatcz/ptr-utils';
-import cartesianChart from "../cartesianChart/cartesianChart";
-import CartesianChartContent from "../cartesianChart/CartesianChartContent";
+import cartesianChart from '../cartesianChart/cartesianChart';
+import CartesianChartContent from '../cartesianChart/CartesianChartContent';
 import ChartLegend from '../../ChartLegend';
 
 class Index extends React.PureComponent {
@@ -20,7 +20,7 @@ class Index extends React.PureComponent {
 		yTicks: true,
 
 		xGridlines: true,
-		xScaleType: 'linear'
+		xScaleType: 'linear',
 	};
 
 	static propTypes = {
@@ -32,7 +32,7 @@ class Index extends React.PureComponent {
 		pointSymbol: PropTypes.string,
 
 		zSourcePath: PropTypes.string,
-		zOptions: PropTypes.object
+		zOptions: PropTypes.object,
 	};
 
 	constructor(props) {
@@ -43,11 +43,24 @@ class Index extends React.PureComponent {
 		const props = this.props;
 
 		/* data preparation */
-		let xDomain, yDomain, zDomain, xScale, yScale, zScale, xValues, yValues, zValues, colors = null;
+		let xDomain,
+			yDomain,
+			zDomain,
+			xScale,
+			yScale,
+			zScale,
+			xValues,
+			yValues,
+			zValues,
+			colors = null;
 		let data = {...props.data};
 
 		if (data) {
-			data = filter.filterDataWithNullValue(data, [props.xSourcePath, props.ySourcePath], props.serieDataSourcePath);
+			data = filter.filterDataWithNullValue(
+				data,
+				[props.xSourcePath, props.ySourcePath],
+				props.serieDataSourcePath
+			);
 
 			/* domain */
 			if (props.isSerie) {
@@ -118,7 +131,9 @@ class Index extends React.PureComponent {
 			}
 
 			// apply diversion value to extreme values
-			let diversionValue = props.diverging && props.yOptions && props.yOptions.diversionValue || 0;
+			let diversionValue =
+				(props.diverging && props.yOptions && props.yOptions.diversionValue) ||
+				0;
 			if (props.diverging && yMin > diversionValue) {
 				yMin = diversionValue;
 			}
@@ -126,7 +141,6 @@ class Index extends React.PureComponent {
 			if (props.diverging && yMax < diversionValue) {
 				yMax = diversionValue;
 			}
-
 
 			/* domains */
 			if (props.xScaleType === 'time') {
@@ -143,7 +157,7 @@ class Index extends React.PureComponent {
 			if (props.xScaleType === 'time') {
 				xScale = d3.scaleTime();
 			} else if (props.xScaleType === 'logarithmic') {
-				xScale = d3.scaleLog()
+				xScale = d3.scaleLog();
 			} else {
 				xScale = d3.scaleLinear();
 			}
@@ -165,30 +179,34 @@ class Index extends React.PureComponent {
 				.domain(zDomain)
 				.range([props.minPointRadius, props.maxPointRadius]);
 
-			colors = d3
-				.scaleOrdinal(d3.schemeCategory10)
-				.domain(_.map(props.data,record => {return _.get(record, props.keySourcePath)}));
+			colors = d3.scaleOrdinal(d3.schemeCategory10).domain(
+				_.map(props.data, record => {
+					return _.get(record, props.keySourcePath);
+				})
+			);
 		}
 
 		return (
 			<>
-				<svg className="ptr-chart ptr-cartesian-chart ptr-scatter-chart" height={props.height}>
-					{(data) ?
-						<CartesianChartContent
-							{...props}
-							{...{xScale, yScale}}
-						>
+				<svg
+					className="ptr-chart ptr-cartesian-chart ptr-scatter-chart"
+					height={props.height}
+				>
+					{data ? (
+						<CartesianChartContent {...props} {...{xScale, yScale}}>
 							{this.renderPoints(data, xScale, yScale, zScale, colors)}
 						</CartesianChartContent>
-					: null}
+					) : null}
 				</svg>
-				{this.props.legend ? <ChartLegend
-					data={data}
-					keySourcePath={this.props.keySourcePath}
-					nameSourcePath={this.props.nameSourcePath}
-					colorSourcePath={this.props.colorSourcePath}
-					colorScale={colors}
-				/> : null}
+				{this.props.legend ? (
+					<ChartLegend
+						data={data}
+						keySourcePath={this.props.keySourcePath}
+						nameSourcePath={this.props.nameSourcePath}
+						colorSourcePath={this.props.colorSourcePath}
+						colorScale={colors}
+					/>
+				) : null}
 			</>
 		);
 	}
@@ -201,7 +219,10 @@ class Index extends React.PureComponent {
 			let color = _.get(item, this.props.colorSourcePath);
 			let name = _.get(item, this.props.nameSourcePath);
 
-			if ((!color && this.props.colorSourcePath) || this.props.defaultSchemePointColors) {
+			if (
+				(!color && this.props.colorSourcePath) ||
+				this.props.defaultSchemePointColors
+			) {
 				color = colors(key);
 			}
 
@@ -210,7 +231,7 @@ class Index extends React.PureComponent {
 
 				return _.map(serie, (serieItem, index) => {
 					let xValue = _.get(serieItem, this.props.xSourcePath);
-					if (this.props.xScaleType === "time") {
+					if (this.props.xScaleType === 'time') {
 						xValue = new Date(xValue);
 					}
 					let yValue = _.get(serieItem, this.props.ySourcePath);
@@ -221,12 +242,21 @@ class Index extends React.PureComponent {
 						finalName = `${name} (${itemName})`;
 					}
 
-					return this.renderPoint(key, serieItem, xScale(xValue), yScale(yValue), zScale(zValue), color, finalName, index, siblings);
+					return this.renderPoint(
+						key,
+						serieItem,
+						xScale(xValue),
+						yScale(yValue),
+						zScale(zValue),
+						color,
+						finalName,
+						index,
+						siblings
+					);
 				});
-
 			} else {
 				let xValue = _.get(item, this.props.xSourcePath);
-				if (this.props.xScaleType === "time") {
+				if (this.props.xScaleType === 'time') {
 					xValue = new Date(xValue);
 				}
 
@@ -234,7 +264,17 @@ class Index extends React.PureComponent {
 
 				let zValue = _.get(item, this.props.zSourcePath);
 
-				return this.renderPoint(key, item, xScale(xValue), yScale(yValue), zScale(zValue), color, name, 0, siblings);
+				return this.renderPoint(
+					key,
+					item,
+					xScale(xValue),
+					yScale(yValue),
+					zScale(zValue),
+					color,
+					name,
+					0,
+					siblings
+				);
 			}
 		});
 	}
