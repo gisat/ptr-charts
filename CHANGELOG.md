@@ -1,3 +1,15 @@
+# v1.3.4 (Mon Mar 22 2021)
+
+#### 🐾 Patch
+
+- upgrade ptr dependencies [#8](https://github.com/gisat-panther/ptr-charts/pull/8) ([@vlach1989](https://github.com/vlach1989))
+
+#### Authors: 1
+
+- Pavel Vlach ([@vlach1989](https://github.com/vlach1989))
+
+---
+
 # v1.3.3 (Wed Feb 17 2021)
 
 #### 🐾 Patch
